@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import Form from './form'
 
 class Add extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			inventory: [],
       users: [],
-      kinds: [],
-			item: {
+			inventory: {
 				itreID: '',
 			  serial: '',
 			  bought: '',
@@ -18,10 +17,37 @@ class Add extends Component {
 			  owner: '',
 			  available: '',
 			  borrowed: '',
+				item: '',
 			  returned: '',
-			  kind: '',
-			  item: '',
+			  kind: 'Computer',
 			  location: ''
+			},
+			computer: {
+				brand: '',
+			  model: '',
+			  type: '',
+			  hd: '',
+			  ram: '',
+			  cpu: '',
+			  price: ''
+			},
+			cord: {
+				brand: '',
+			  type: '',
+			  a: '',
+			  b: '',
+			  c: '',
+			  length: '',
+			  price: ''
+			},
+			accessory: {
+				brand: '',
+			  model: '',
+			  type: '',
+			  serial: '',
+			  power: '',
+			  size: '',
+			  price: ''
 			}
 		}
 		this.handleChange = this.handleChange.bind(this);
@@ -29,47 +55,51 @@ class Add extends Component {
 	}
 
 	componentDidMount() {
+		let newItem = {...this.state.inventory}
     axios.get('http://api.ems.test/user')
       .then(res => {
-				console.log('res: ', res)
-				console.log('data: ', res.data)
-				console.log('sub-data: ', res.data.data)
-				console.log('sub-data: ', res.data.data[0])
-        this.setState({ users: res.data.data[0] });
+				newItem.owner = res.data.users[0]._id
+        this.setState({
+					users: res.data.users,
+					inventory: newItem
+				});
       })
+			.catch(error => {
+		    alert(error)
+		  })
   }
 
 	handleChange(event) {
 		const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     const name = event.target.name;
+		let newItem = {...this.state.inventory}
+		newItem[name] = value
     this.setState({
-			item: {
-				[name]: value
-			}
+			inventory: newItem
 		})
   }
 
-  handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.item);
-    event.preventDefault();
+  handleSubmit(NEWinv, NEWitem) {
+		axios.post('http://api.ems.test/inv', {inv: NEWinv, item: NEWitem})
+      .then(res => {
+				console.log(res)
+      })
+			.catch(function (error) {
+		    if (error.response.data) {
+					alert(error.response.data.msg)
+					console.log('response: ', error.response.data.error.message)
+		    } else if (error.request) {
+		      console.log('request: ', error.request);
+		    } else {
+		      console.log('Error', error.message);
+		    }
+		  })
   }
 
   render() {
     return (
 			<div>
-				<form onSubmit={this.handleSubmit}>
-					<label>
-						Owner:
-						<select value={this.state.item.owner} name="owner" onChange={this.handleChange}>
-							{ this.state.users
-								.map(user => (
-									<option value={user._id}>{user.first} {user.last}</option>
-								))
-							}
-						</select>
-					</label>
-          <input type="submit" value="Submit" />
-        </form>
+				<Form handleSubmit={this.handleSubmit} type='new' />
 			</div>
     )
   }

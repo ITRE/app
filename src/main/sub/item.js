@@ -1,41 +1,70 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import moment from 'moment'
 
 class Item extends Component {
-  render() {
-  //  const borrow = date_borrowed.toString()
-	let inDate, outDate
-	switch (this.props.type) {
-		case 'all':
-			const {item, type} = this.props.data
-      if (item) {
-  			inDate = (item.date_returned ? moment(item.date_returned).calendar() : "N/A")
-  			outDate = (item.date_borrowed ? moment(item.date_borrowed).calendar() : "N/A")
-  			return (
-  				<div  style={{display: 'flex', flexFlow: 'wrap row', margin: '0 10px'}}>
-  					<p style={{ width: '200px'}}>{item.id}</p>
-  					<p style={{ width: '200px'}}>{type}</p>
-  					<p style={{ width: '200px'}}>{item.outDate}</p>
-  					<button style={{ width: '200px'}}>Checkout/Return</button>
-  				</div>
-  			)
-      }
-		default:
-	    const {id, borrowed, date_borrowed, date_returned} = this.props.data
-	    inDate = (date_returned ? moment(date_returned).calendar() : "N/A")
-	    outDate = (date_borrowed ? moment(date_borrowed).calendar() : "N/A")
-	    const available = (borrowed ? "In Use" : "Available")
+  constructor(props) {
+    super(props)
+    this.checkOut = this.checkOut.bind(this)
+    this.checkIn = this.checkIn.bind(this)
+    this.edit = this.edit.bind(this)
+  }
+  checkOut() {
+    this.props.checkOut(this.props.position)
+  }
+  checkIn() {
+    this.props.checkIn(this.props.position)
+  }
+  edit() {
+    this.props.edit(this.props.position)
+  }
 
-			return (
-				<div  style={{display: 'flex', flexFlow: 'wrap row', margin: '0 10px'}}>
-					<p style={{ width: '200px'}}>{id}</p>
-					<p style={{ width: '200px'}}>{available}</p>
-					<p style={{ width: '200px'}}>{outDate}</p>
-					<p style={{ width: '200px'}}>{inDate}</p>
-					<button style={{ width: '200px'}}>Checkout/Return</button>
-				</div>
-			)
-	}
+  render() {
+  	let inDate, outDate
+    const {_id, itreID, date_borrowed, date_returned, owner, location, kind} = this.props.data
+    inDate = (date_returned ? moment(date_returned).calendar() : "N/A")
+    outDate = (date_borrowed ? moment(date_borrowed).calendar() : "N/A")
+
+    switch(this.props.type) {
+      case 'admin':
+        return (
+          <div key={_id}  style={{display: 'flex', flexFlow: 'wrap row', margin: '0 10px'}}>
+            <p style={{ width: '200px'}}>{itreID}</p>
+            <p style={{ width: '200px'}}>{owner.first} {owner.last}</p>
+            <p style={{ width: '200px'}}>{location}</p>
+              <Link style={{ width: '200px'}} to={{
+                pathname: '/inventory/edit',
+                state: { item: this.props.data }
+              }}>Edit</Link>
+          </div>
+        )
+      case 'account':
+        return (
+          <div key={_id}  style={{display: 'flex', flexFlow: 'wrap row', margin: '0 10px'}}>
+            <p style={{ width: '200px'}}>{itreID}</p>
+            <p style={{ width: '200px'}}>{kind}</p>
+            <p style={{ width: '200px'}}>{outDate}</p>
+            { this.props.data.available ?
+              <button style={{ width: '200px'}} onClick={this.checkOut}>Checkout</button> :
+              <button style={{ width: '200px'}} onClick={this.checkIn}>Return</button>
+            }
+          </div>
+        )
+      default:
+        return (
+          <div key={_id}  style={{display: 'flex', flexFlow: 'wrap row', margin: '0 10px'}}>
+            <p style={{ width: '200px'}}>{itreID}</p>
+              { this.props.data.available ?
+                <button style={{ width: '200px'}} onClick={this.checkOut}>Checkout</button> :
+                <button style={{ width: '200px'}} onClick={this.checkIn}>Return</button>
+              }
+            <p style={{ width: '200px'}}>{outDate}</p>
+            <p style={{ width: '200px'}}>{inDate}</p>
+
+          </div>
+        )
+    }
+
 
   }
 }

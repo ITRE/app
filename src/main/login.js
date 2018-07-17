@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import axios from 'axios'
-const Cookies = require('js-cookie')
 
 class Login extends Component {
 	constructor(props) {
@@ -29,19 +28,17 @@ class Login extends Component {
 			withCredentials: 'include'
 		})
       .then(res => {
-				console.log('Res: ', res.data.token)
 				localStorage.setItem('access token', res.data.token)
 				this.setState({login:true})
-				//Cookies.get()
       })
-			.catch(function (error) {
-		    alert(error);
+			.catch(error => {
+		    alert(error)
 		  })
 	}
 
   render() {
 		if (this.state.login) {
-			return <Redirect to={{pathname: '/',state: this.state.user}}/>
+			return <Redirect to={{pathname: '/'}}/>
 		}
     return (
 			<div>
