@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import Item from './sub/item'
+import Item from '../sub/item'
 
 const jwt = require('jsonwebtoken')
 
@@ -47,7 +47,6 @@ class Account extends Component {
   }
 
   componentDidMount() {
-		const username = jwt.decode(localStorage.getItem('access token')).username
 		const url = `http://api.ems.test/me/inv/`
     axios.get(url, {
 			method: "get",
@@ -55,8 +54,6 @@ class Account extends Component {
 			withCredentials: 'include'
 		})
       .then(res => {
-				console.log('JWT '+localStorage.getItem('access token'))
-				console.log(res.data)
         this.setState({ inventory: res.data.data })
       })
 			.catch(error => {
@@ -78,7 +75,7 @@ class Account extends Component {
         </div>
 	        { this.state.inventory && this.state.inventory
 						.filter((inv) => (inv.owner._id === username))
-						.map((inv, index) => ( <Item type='account' key={inv._id} data={inv} position={index} checkOut={this.checkOut} /> )) }
+						.map((inv, index) => ( <Item type='account' key={inv._id} data={inv} position={index} checkIn={this.checkIn} /> )) }
 			</div>
     )
   }

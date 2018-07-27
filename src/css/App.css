@@ -38,3 +38,31 @@ nav a {
   background: black;
   color: white;
 }
+
+.checkbox {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.checkbox.who {
+  width: 50%;
+}
+
+.requests {
+  padding: 20px;
+}
+
+.form {
+  padding: 20px;
+  text-align: left;
+}
+
+.form .form-group {
+  margin-bottom: 25px;
+}
+
+.form .form-label {
+  margin-right: 10px;
+}

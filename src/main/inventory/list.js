@@ -111,9 +111,6 @@ class List extends Component {
 				return inv
 			})
 
-
-
-
 		return (
 			<div>
 			<p>[filters]</p>

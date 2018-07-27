@@ -65,13 +65,16 @@ class Form extends Component {
 					subItem = { ...this.state[newItem.kind.toLowerCase()], ...this.props.item.item}
 					delete subItem.__v
 					newItem.owner = this.props.item.owner._id
+					kind = newItem.kind.toLowerCase()
 				} else {
+
 					newItem = {...this.state.inventory}
+					kind = newItem.kind.toLowerCase()
 					subItem = {...this.state[kind]}
 					newItem.owner = res.data.users[0]._id
 				}
-				kind = newItem.kind.toLowerCase()
 				newItem.item = subItem._id
+
 				for (const key in newItem) {
 					if (newItem[key]) {
 						continue
@@ -160,15 +163,19 @@ class Form extends Component {
 					{this.fields('inventory')}
 					{this.fields(this.state.inventory.kind.toLowerCase())}
 
-					<label htmlFor="type">
-						Type of Change:
-						<input value={this.state.log.type} name="type" onChange={this.change.bind(this, 'log')} />
-					</label>
+					{this.props.type !== 'new' &&
+						<div>
+							<label htmlFor="type">
+								Type of Change:
+								<input value={this.state.log.type} name="type" onChange={this.change.bind(this, 'log')} />
+							</label>
 
-					<label htmlFor="note">
-						Note:
-						<textarea value={this.state.log.note} name="note" onChange={this.change.bind(this, 'log')} />
-					</label>
+							<label htmlFor="note">
+								Note:
+								<textarea value={this.state.log.note} name="note" onChange={this.change.bind(this, 'log')} />
+							</label>
+						</div>
+					}
 
           <input type="submit" value="Submit" />
         </form>
