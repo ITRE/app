@@ -3,7 +3,10 @@ import React from 'react'
 const Checkbox = (props) => {
     return(
     <div className="form-group">
-      <label htmlFor={props.name} className="form-label">{props.title}</label>
+      <label htmlFor={props.name} style={props.error ? {color:'red'} : {}} className="form-label">
+        {props.title}
+        {props.message && <span style={{fontSize: '12px'}}><br />{props.message}</span>}
+      </label>
       <div className="checkbox-group">
         {props.options.map(option => {
           return (

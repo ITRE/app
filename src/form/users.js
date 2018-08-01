@@ -24,7 +24,10 @@ class UserSelect extends Component {
   render() {
     return(
       <div className="form-group">
-        <label htmlFor={this.props.name} className="form-label"> {this.props.title} </label>
+				<label htmlFor={this.props.name} style={this.props.error ? {color:'red'} : {}} className="form-label">
+	        {this.props.title}
+	        {this.props.message && <span style={{fontSize: '12px'}}><br />{this.props.message}</span>}
+	      </label>
         <select
           name={this.props.name}
           value={this.props.value}

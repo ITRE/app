@@ -30,11 +30,14 @@ class EditTicket extends Component {
 			  note: ''
 			},
 			info: {...this.props.location.state.ticket.info},
-			redirect: false
+			redirect: false,
+			addUser: false
 		}
     this.submit = this.submit.bind(this)
     this.setInfo = this.setInfo.bind(this)
     this.change = this.change.bind(this)
+    this.newUser = this.newUser.bind(this)
+    this.cancel = this.cancel.bind(this)
 	}
 
 	change(event) {
@@ -77,6 +80,29 @@ class EditTicket extends Component {
 		event.preventDefault()
   }
 
+	newUser(event) {
+		this.setState({
+			redirect: <Redirect to={{
+				pathname: '/admin/newUser',
+				state: {
+					data: {
+						user: jwt.decode(localStorage.getItem('access token')).id,
+						for: this.state.for,
+						kind: 'NewUser'
+					},
+					info: this.state.info,
+					log: this.state.log
+				}
+			}} />
+		})
+	}
+
+	cancel(event) {
+		this.setState({
+			redirect: <Redirect to={'/tickets/'} />
+		})
+	}
+
   render() {
 		console.log(this.props)
 		let kind
@@ -106,7 +132,20 @@ class EditTicket extends Component {
     return (
 			<div className='requests'>
 				{ this.state.redirect && this.state.redirect }
+				{ this.state.addUser && this.state.addUser }
 				<form className='form' onSubmit={this.submit}>
+					<Textarea
+						title='Admin Notes'
+						name='log'
+						value={this.state.log.note}
+						handleChange={this.change}
+						placeholder='Notes'
+					/>
+					<button type="submit" value="Submit">Submit</button>
+					{this.state.kind === 'New User'&& <button onClick={this.newUser} value="Create User">Create User</button>}
+					<button onClick={this.cancel} value="Cancel">Cancel</button>
+					<br />
+					<h2>Edit Request Ticket</h2>
 					<Users
 						title='Requestor'
 						name='user'
@@ -150,15 +189,9 @@ class EditTicket extends Component {
 					/>
 				{kind}
 				<br />
-				<Textarea
-					title='Admin Notes About This Change'
-					name='log'
-					value={this.state.log.note}
-					handleChange={this.change}
-					placeholder='Notes'
-				/>
-				<br />
-				<input type="submit" value="Submit" />
+				<button type="submit" value="Submit">Submit</button>
+				{this.state.kind === 'New User'&& <button onClick={this.newUser} value="Create User">Create User</button>}
+				<button onClick={this.cancel} value="Cancel">Cancel</button>
 				</form>
 			</div>
     )

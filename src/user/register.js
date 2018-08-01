@@ -1,13 +1,25 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import axios from 'axios'
-//import Login from './login'
+
+import Input from '../form/input.js'
+import Users from '../form/users.js'
+import Select from '../form/select.js'
 
 class Register extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			data: {
+			username: this.props.username ? this.props.username : '',
+		  password: this.props.password ? this.props.password : '',
+		  email: this.props.email ? this.props.email : '',
+		  phone: this.props.phone ? this.props.phone : '',
+		  first: this.props.first ? this.props.first : '',
+		  last: this.props.last ? this.props.last : '',
+		  program: this.props.program ? this.props.program : '',
+		  super: this.props.super ? this.props.super : '',
+		  room: this.props.room ? this.props.room : '',
+			errors: {
 				username: '',
 			  password: '',
 			  email: '',
@@ -18,93 +30,81 @@ class Register extends Component {
 			  super: '',
 			  room: ''
 			},
-			errors: {
-				username: {
-					visible: false,
-					text: 'Please enter a username'
-				},
-			  password: {
-					visible: false,
-					text: 'Please enter a password'
-				},
-			  passwordShort: {
-					visible: false,
-					text: 'Your password is too short'
-				},
-			  email: {
-					visible: false,
-					text: 'Please enter an email'
-				},
-			  phone: {
-					visible: false,
-					text: 'Please enter a phone number'
-				},
-			  first: {
-					visible: false,
-					text: 'Please enter your first name'
-				},
-			  last: {
-					visible: false,
-					text: 'Please enter your last name'
-				},
-			  program: {
-					visible: false,
-					text: 'Please enter your program group name'
-				},
-			  super: {
-					visible: false,
-					text: 'Please enter your supervisor\'s name'
-				},
-			  room: {
-					visible: false,
-					text: 'Please enter your room number'
-				}
-			},
 			registered: false,
 			validated: false
 		}
-
-		this.handleChange = this.handleChange.bind(this)
 		this.validate = this.validate.bind(this)
-		this.handleSubmit = this.handleSubmit.bind(this)
+    this.change = this.change.bind(this)
+    this.submit = this.submit.bind(this)
 	}
 
 	validate() {
 		const errors = {...this.state.errors}
 		let success = true
-		for (const key in this.state.data) {
-			if (key === 'password') {
-				if (this.state.data.password.length < 8) {
-					console.log(this.state.data.password.length)
-					errors.passwordShort.visible = true
-					success = false
-				}
-			} else if (this.state.data[key].length < 1) {
-				errors[key].visible = true
+		for (const key in errors) {
+			if(errors[key]) {
 				success = false
-			} else {
-				errors[key].visible = false
+			} else if (errors[key]==='') {
+				success = false
+				errors[key] = true
+		    this.setState({
+					errors: errors
+				})
 			}
 		}
+		return success
+	}
 
-		this.setState({
-			errors: errors,
-			validated: success
+  componentDidMount() {
+		if (this.props.type==='Admin') {
+			const errors = {...this.state.errors}
+			for (const key in errors) {
+				if (this.state[key] === '') {
+					errors[key] = true
+			    this.setState({
+						errors: errors
+					})
+				}
+			}
+		}
+	}
+
+	change(event) {
+		const value = event.target.value
+    const name = event.target.name
+		let errors = {...this.state.errors}
+		if (name in errors) {
+			switch(event.target.type) {
+				case 'password':
+					if (!value || value.length < 8) {
+						errors[name] = true
+					} else {
+						errors[name] = false
+					}
+					break
+				default:
+					if (!value) {
+						errors[name] = true
+					} else {
+						errors[name] = false
+					}
+			}
+		}
+    this.setState({
+			[name]: value,
+			errors: errors
 		})
 	}
 
-	handleChange(event) {
-		let newData = {...this.state.data}
-		newData[event.target.name] = event.target.value
-		this.setState({
-			data: newData
-		})
-	}
-
-	handleSubmit(event) {
-		console.log(this.state)
-		this.validate()
-		if (this.state.validated) {
+	submit(event) {
+		event.preventDefault()
+		const validated = this.validate()
+		if (!validated) {
+			alert('Not all fields were filled correctly. Please double check your information and try again.')
+		} else {
+			if (this.props.type==='Admin') {
+				alert('Whoo!')
+			}
 			axios(`http://api.ems.test/user`, {
 				method: "post",
 				data: this.state.data,
@@ -112,81 +112,104 @@ class Register extends Component {
 			})
 	    .then(res => {
 				this.setState({
-					registered:true
+					registered: true
 				})
 	    })
 			.catch(error => {
 		    alert(error)
 		  })
 		}
-
 	}
 
   render() {
-		if (this.state.registered) {
-			return <Redirect to={{pathname: '/login'}}/>
-		}
     return (
 			<div>
+				{this.state.registered && <Redirect to={{pathname: '/login'}}/>}
 				Fill this out:
 
-				<form onSubmit={this.handleSubmit}>
-
-					{this.state.errors.username.visible && <p style={{color:'red'}}>{this.state.errors.username.text}</p>}
-	        <label>
-	          Username:
-	          <input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
-	        </label>
-
-					{this.state.errors.password.visible && <p style={{color:'red'}}>{this.state.errors.password.text}</p>}
-					{this.state.errors.passwordShort.visible && <p style={{color:'red'}}>{this.state.errors.passwordShort.text}</p>}
-	        <label>
-	          Password:
-	          <input type="password" name="password" value={this.state.password} onChange={this.handleChange} />
-	        </label>
-
-					{this.state.errors.first.visible && <p style={{color:'red'}}>{this.state.errors.first.text}</p>}
-	        <label>
-	          First Name:
-	          <input type="text" name="first" value={this.state.first} onChange={this.handleChange} />
-	        </label>
-
-					{this.state.errors.last.visible && <p style={{color:'red'}}>{this.state.errors.last.text}</p>}
-	        <label>
-	          Last Name:
-	          <input type="text" name="last" value={this.state.last} onChange={this.handleChange} />
-	        </label>
-
-					{this.state.errors.email.visible && <p style={{color:'red'}}>{this.state.errors.email.text}</p>}
-	        <label>
-	          Email:
-	          <input type="text" name="email" value={this.state.email} onChange={this.handleChange} />
-	        </label>
-
-					{this.state.errors.room.visible && <p style={{color:'red'}}>{this.state.errors.room.text}</p>}
-	        <label>
-	          Room Number:
-	          <input type="text" name="room" value={this.state.room} onChange={this.handleChange} />
-	        </label>
-
-					{this.state.errors.phone.visible && <p style={{color:'red'}}>{this.state.errors.phone.text}</p>}
-	        <label>
-	          Phone Number:
-	          <input type="text" name="phone" value={this.state.phone} onChange={this.handleChange} />
-	        </label>
-
-					{this.state.errors.super.visible && <p style={{color:'red'}}>{this.state.errors.super.text}</p>}
-	        <label>
-	          Supervisor:
-	          <input type="text" name="super" value={this.state.super} onChange={this.handleChange} />
-	        </label>
-
-					{this.state.errors.program.visible && <p style={{color:'red'}}>{this.state.errors.program.text}</p>}
-	        <label>
-	          Program:
-	          <input type="text" name="program" value={this.state.program} onChange={this.handleChange} />
-	        </label>
-
+				<form onSubmit={this.submit}>
+					<Input
+						title='Username'
+						name='username'
+						type='text'
+						error={this.state.errors.username}
+						value={this.state.username}
+						handleChange={this.change}
+						placeholder='Username'
+					/>
+					<Input
+						title='Password'
+						name='password'
+						type='password'
+						error={this.state.errors.password}
+						criteria='password'
+						message='Must be at least 8 characters'
+						value={this.state.password}
+						handleChange={this.change}
+						placeholder='Password'
+					/>
+					<Input
+						title='First Name'
+						name='first'
+						type='text'
+						error={this.state.errors.first}
+						value={this.state.first}
+						handleChange={this.change}
+						placeholder='First Name'
+					/>
+					<Input
+						title='Last Name'
+						name='last'
+						type='text'
+						error={this.state.errors.last}
+						value={this.state.last}
+						handleChange={this.change}
+						placeholder='Last Name'
+					/>
+					<Input
+						title='Email'
+						name='email'
+						type='text'
+						error={this.state.errors.email}
+						value={this.state.email}
+						handleChange={this.change}
+						placeholder='Email'
+					/>
+					<Input
+						title='Phone Number'
+						name='phone'
+						type='text'
+						error={this.state.errors.phone}
+						value={this.state.phone}
+						handleChange={this.change}
+						placeholder='Phone Number'
+					/>
+					<Input
+						title='Room Number'
+						name='room'
+						type='text'
+						error={this.state.errors.room}
+						value={this.state.room}
+						handleChange={this.change}
+						placeholder='Room Number'
+					/>
+					<Users
+						title='Supervisor:'
+						name='super'
+						error={this.state.errors.super}
+						value={this.state.super}
+						handleChange={this.change}
+						placeholder='Select One'
+					/>
+					<Select
+						title='Program:'
+						name='program'
+						error={this.state.errors.program}
+						options={['Administration', 'IT & Web', 'LTAP', 'Aviation', 'Bike / Ped', 'Econ / Policy', 'Highway Systems', 'Modeling / Comp', 'Port / Ferry', 'School Planning / Transpo', 'Transit', 'TIMS', 'Graphic Design', 'Other']}
+						value={this.state.program}
+						handleChange={this.change}
+						placeholder='Select One'
+					/>
 	        <input type="submit" value="Submit" />
 	      </form>
 			</div>

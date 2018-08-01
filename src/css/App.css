@@ -2,6 +2,15 @@
   text-align: center;
 }
 
+a {
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #61DAFB;
+  cursor:pointer;
+}
+
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;

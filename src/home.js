@@ -7,6 +7,7 @@ import AddInventory from './inventory/new'
 import EditInventory from './inventory/edit'
 
 import Account from './user/account'
+import AdminNewUser from './admin/user'
 
 import NewTicket from './requests/new'
 import EditTicket from './requests/edit'
@@ -60,6 +61,8 @@ class Home extends Component {
 					<br />
 
 	        <Switch>
+						<Route path="/admin/newUser" component={AdminNewUser}/>
+
 						<Route path="/inventory/edit" component={EditInventory}/>
 						<Route path="/inventory/new" component={AddInventory}/>
 						<Route path="/inventory" component={InventoryList}/>
@@ -67,7 +70,7 @@ class Home extends Component {
 						<Route path="/tickets/edit" component={EditTicket}/>
 						<Route path="/tickets/new" component={NewTicket}/>
 						<Route path="/tickets" component={TicketList}/>
-						
+
 	          <Route path="/" component={Account}/>
 	        </Switch>
 				</div>

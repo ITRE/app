@@ -24,7 +24,7 @@ class Request extends Component {
 	render(){
 		const adminButtons = (
 			<div className="admin_buttons">
-				<button onClick={this.edit}>Edit</button>
+				<button onClick={this.edit}>Work On Request</button>
 				<button onClick={this.seen}>Mark Seen</button>
 				<button onClick={this.complete}>Mark Complete</button>
 			</div>
@@ -37,13 +37,13 @@ class Request extends Component {
 			</div>
 		)
 	  return (
-	    <div className={ this.props.viewer.role === 'admin' ? 'admin_'+this.props.ticket.priority : 'staff_ticket' }>
-				{ this.props.viewer.role === 'admin' && adminInfo }
+	    <div className={ this.props.viewer.role === 'Admin' ? 'admin_'+this.props.ticket.priority : 'staff_ticket' }>
+				{ this.props.viewer.role === 'Admin' && adminInfo }
 				<p>Ticket for: {this.props.ticket.for}</p>
 				<p>Submitted on: {moment(this.props.ticket.added).format('MMMM Do YYYY, h:mm a')}</p>
 				<p>Kind: {this.props.ticket.kind}</p>
 				{this.props.ticket.completed  && <p>Completed on: {moment(this.props.ticket.completed).format('MMMM Do YYYY, h:mm a')}</p>}
-				{ this.props.viewer.role === 'admin' && adminButtons }
+				{ this.props.viewer.role === 'Admin' && adminButtons }
 	    </div>
 	  )
 	}

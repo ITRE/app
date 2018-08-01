@@ -17,6 +17,7 @@ class NewUser extends Component {
 				first: this.props.info.first ? this.props.info.first : '',
 				last: this.props.info.last ? this.props.info.last : '',
 				email: this.props.info.email ? this.props.info.email : '',
+				role: this.props.info.role ? this.props.info.role : '',
 				phone: this.props.info.phone ? this.props.info.phone : '',
 				program: this.props.info.program ? this.props.info.program : '',
 				super: this.props.info.super ? this.props.info.super : '',
@@ -87,6 +88,14 @@ class NewUser extends Component {
 					value={this.state.user.last}
 					handleChange={this.change}
 					placeholder='Last'
+				/>
+				<Select
+					title='Role:'
+					name='role'
+					options={['Staff', 'Temp', 'Grad Student', 'Student', 'Other']}
+					value={this.state.user.role}
+					handleChange={this.change}
+					placeholder='Select One'
 				/>
 				<Input
 					title='Email:'

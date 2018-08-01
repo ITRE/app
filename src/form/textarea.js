@@ -3,7 +3,10 @@ import React from 'react'
 const Textarea = (props) => {
   return (
     <div className="form-group">
-      <label htmlFor={props.name} className="form-label">{props.title}</label>
+      <label htmlFor={props.name} style={props.error ? {color:'red'} : {}} className="form-label">
+        {props.title}
+        {props.message && <span style={{fontSize: '12px'}}><br />{props.message}</span>}
+      </label>
       <textarea
         className="form-input"
         id={props.name}
