@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 
-import Date from '../form/date.js'
-import Select from '../form/select.js'
-import Checkbox from '../form/checkbox.js'
-import Textarea from '../form/textarea.js'
+import Input from '../../form/input.js'
+import Textarea from '../../form/textarea.js'
+import Date from '../../form/date.js'
+import Select from '../../form/select.js'
 
-class Error extends Component {
+class Access extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			type: '',
-			desc: '',
-			start: '',
-			tried: []
+			type: this.props.info.type ? this.props.info.type : '',
+			location: this.props.info.location ? this.props.info.location : '',
+			desc: this.props.info.desc ? this.props.info.desc : '',
+			start: this.props.info.start ? moment(this.props.info.start).format('YYYY-MM-DD') : ''
 		}
     this.change = this.change.bind(this)
 	}
@@ -43,38 +44,39 @@ class Error extends Component {
     return (
 			<div>
 				<Select
-					title='What kind of issue are you having?'
+					title='What kind of access do you need?'
 					name='type'
 					type='text'
-					options={['Start Up / Boot', 'Monitor / Display', 'Microsoft Office', 'Email / Internet', 'Remote Desktop', 'Phone', 'Laptop / Mobile', 'Other']}
+					options={['Folder / Server', 'Software Install', 'Room', 'Other']}
 					value={this.state.type}
 					handleChange={this.change}
 					placeholder='Select One'
 				/>
-				<Textarea
-					title='Describe the error'
-					name='desc'
-					value={this.state.desc}
+				<Input
+					title='Where do you need access to?'
+					name='location'
+					type='text'
+					value={this.state.location}
 					handleChange={this.change}
-					placeholder='Description'
+					placeholder='Room or File Path'
 				/>
 				<Date
-					title='When did this issue begin?'
+					title='When do you need this access?'
 					name='start'
+					type='text'
 					value={this.state.start}
 					handleChange={this.change}
 				/>
-				<Checkbox
-					title='What have you tried?'
-					name='tried'
-					options={['Turning it off and on', 'Checked for updates', 'Connected to NCSU or EDURoam WIFI (if internet issue)', 'Other']}
-					selectedOptions={this.state.tried}
+				<Textarea
+					title='Additional Description'
+					name='desc'
+					type='text'
+					value={this.state.desc}
 					handleChange={this.change}
-					placeholder='Name'
 				/>
 			</div>
     )
   }
 }
 
-export default Error
+export default Access

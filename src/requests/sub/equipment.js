@@ -1,19 +1,20 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 
-import Input from '../form/input.js'
-import Date from '../form/date.js'
-import Select from '../form/select.js'
-import Textarea from '../form/textarea.js'
+import Input from '../../form/input.js'
+import Date from '../../form/date.js'
+import Select from '../../form/select.js'
+import Textarea from '../../form/textarea.js'
 
 class Equipment extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			budget: '',
-			account: '',
-			need: '',
-			type: '',
-			desc: ''
+			budget: this.props.info.budget ? this.props.info.budget : '',
+			account: this.props.info.account ? this.props.info.account : '',
+			need: this.props.info.need ? moment(this.props.info.need).format('YYYY-MM-DD') : '',
+			type: this.props.info.type ? this.props.info.type : '',
+			desc: this.props.info.desc ? this.props.info.desc : ''
 		}
     this.change = this.change.bind(this)
 	}
@@ -62,7 +63,6 @@ class Equipment extends Component {
 				<Date
 					title='When do you need this item?'
 					name='need'
-					type='text'
 					value={this.state.need}
 					handleChange={this.change}
 				/>

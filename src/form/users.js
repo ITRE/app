@@ -29,6 +29,7 @@ class UserSelect extends Component {
           name={this.props.name}
           value={this.props.value}
           onChange={this.props.handleChange}
+					disabled={ this.props.disabled && 'disabled'}
           >
           <option value="" disabled>{this.props.placeholder}</option>
           { this.props.extraOptions && this.props.extraOptions

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import Home from './main/home'
-import Login from './main/user/login'
-import Register from './main/user/register'
+import Home from './home'
+import Login from './user/login'
+import Register from './user/register'
 import './css/App.css'
 
 class App extends Component {

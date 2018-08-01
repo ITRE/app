@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import { Redirect, Switch, Route, Link } from 'react-router-dom'
-import logo from '../logo.svg'
-import List from './inventory/list'
-import Add from './inventory/new'
-import Edit from './inventory/edit'
+import logo from './logo.svg'
+
+import InventoryList from './inventory/list'
+import AddInventory from './inventory/new'
+import EditInventory from './inventory/edit'
+
 import Account from './user/account'
-//import Equipment from './requests/equipment'
-import Ticket from './requests/ticket'
+
+import NewTicket from './requests/new'
+import EditTicket from './requests/edit'
 import TicketList from './requests/list'
 
 const jwt = require('jsonwebtoken')
@@ -57,12 +60,14 @@ class Home extends Component {
 					<br />
 
 	        <Switch>
-						<Route path="/inventory/edit" component={Edit}/>
-						<Route path="/inventory/new" component={Add}/>
-						<Route path="/inventory" component={List}/>
-						<Route path="/tickets/edit" component={Edit}/>
-						<Route path="/tickets/new" component={Ticket}/>
+						<Route path="/inventory/edit" component={EditInventory}/>
+						<Route path="/inventory/new" component={AddInventory}/>
+						<Route path="/inventory" component={InventoryList}/>
+
+						<Route path="/tickets/edit" component={EditTicket}/>
+						<Route path="/tickets/new" component={NewTicket}/>
 						<Route path="/tickets" component={TicketList}/>
+						
 	          <Route path="/" component={Account}/>
 	        </Switch>
 				</div>

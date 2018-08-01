@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 
-import Input from '../form/input.js'
-import Date from '../form/date.js'
-import Textarea from '../form/textarea.js'
+import Input from '../../form/input.js'
+import Date from '../../form/date.js'
+import Textarea from '../../form/textarea.js'
 
 class Print extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			path: '',
-			size: '',
-			special: '',
-			need: ''
+			path: this.props.info.path ? this.props.info.path : '',
+			size: this.props.info.size ? this.props.info.size : '',
+			special: this.props.info.special ? this.props.info.special : '',
+			need: this.props.info.need ? moment(this.props.info.need).format('YYYY-MM-DD') : ''
 		}
     this.change = this.change.bind(this)
 	}

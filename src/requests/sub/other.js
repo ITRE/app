@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 
-import Date from '../form/date.js'
-import Textarea from '../form/textarea.js'
+import Date from '../../form/date.js'
+import Textarea from '../../form/textarea.js'
 
 class Other extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			desc: '',
-			need: ''
+			desc: this.props.info.desc ? this.props.info.desc : '',
+			need: this.props.info.need ? moment(this.props.info.need).format('YYYY-MM-DD') : ''
 		}
     this.change = this.change.bind(this)
 	}

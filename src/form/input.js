@@ -1,19 +1,21 @@
 import React from 'react'
 
-const Textarea = (props) => {
+const Input = (props) => {
   return (
     <div className="form-group">
       <label htmlFor={props.name} className="form-label">{props.title}</label>
-      <textarea
+      <input
         className="form-input"
         id={props.name}
         name={props.name}
         type={props.type}
         value={props.value}
+        disabled={ props.disabled ? 'disabled' : '' }
         onChange={props.handleChange}
+        placeholder={props.placeholder}
       />
     </div>
   )
 }
 
-export default Textarea
+export default Input

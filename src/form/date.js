@@ -10,6 +10,7 @@ const Date = (props) => {
         name={props.name}
         type="date"
         value={props.value}
+        disabled={ props.disabled ? 'disabled' : '' }
         onChange={props.handleChange}
       />
     </div>

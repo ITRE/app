@@ -14,6 +14,7 @@ const Checkbox = (props) => {
                 name={props.name}
                 onChange={props.handleChange}
                 value={option}
+                disabled={ props.disabled ? 'disabled' : '' }
                 checked={ props.selectedOptions.indexOf(option) !== -1 }
                 type="checkbox" /> {option}
             </label>

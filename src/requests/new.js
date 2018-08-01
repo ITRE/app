@@ -1,19 +1,20 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { Redirect } from 'react-router-dom'
 
 import Users from '../form/users.js'
 import Select from '../form/select.js'
 
-import Access from '../sub/access.js'
-import Equipment from '../sub/equipment.js'
-import Error from '../sub/error.js'
-import NewUser from '../sub/user.js'
-import Print from '../sub/print.js'
-import Other from '../sub/other.js'
+import Access from './sub/access.js'
+import Equipment from './sub/equipment.js'
+import Error from './sub/error.js'
+import NewUser from './sub/user.js'
+import Print from './sub/print.js'
+import Other from './sub/other.js'
 
 const jwt = require('jsonwebtoken')
 
-class Ticket extends Component {
+class NewTicket extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -29,19 +30,9 @@ class Ticket extends Component {
 	change(event) {
 		const value = event.target.value
     const name = event.target.name
-		if (name === 'kind') {
-
-		} if (name === 'tried') {
-			let newTried = [...this.state.tried]
-			event.target.checked ? newTried.push(value) : newTried.splice(newTried.indexOf(value), 1)
-			this.setState({
-				tried: newTried
-			})
-		} else {
-	    this.setState({
-				[name]: value
-			})
-		}
+    this.setState({
+			[name]: value
+		})
 	}
 
 	setInfo(info) {
@@ -51,25 +42,28 @@ class Ticket extends Component {
 	}
 
   submit(event) {
-		
 		const newTicket = {
 			user: jwt.decode(localStorage.getItem('access token')).id,
 			for: this.state.for,
 			kind: this.state.kind
+		}
+		if (this.state.kind === 'New User') {
+			newTicket.kind = 'NewUser'
 		}
 		axios.post('http://api.ems.test/tickets', {
 			ticket: newTicket,
 			kind: this.state.info
 		})
     .then(res => {
-      console.log(res.data)
+			this.setState({
+				redirect: <Redirect to={'/tickets/'} />
+			})
     })
     .catch(error => {
       alert(error)
     })
 
 		event.preventDefault()
-		console.log(this.state)
   }
 
   render() {
@@ -99,6 +93,7 @@ class Ticket extends Component {
 
     return (
 			<div className='requests'>
+				{ this.state.redirect && this.state.redirect }
 				<form className='form' onSubmit={this.submit}>
 					<Users
 						title='Who is this request for?'
@@ -110,7 +105,7 @@ class Ticket extends Component {
 						placeholder='Select One'
 					/>
 					<Select
-						title='What kind of rquest is this?'
+						title='What kind of request is this?'
 						name='kind'
 						options={['Access', 'Equipment', 'Error', 'Print', 'New User', 'Other']}
 						value={this.state.kind}
@@ -126,4 +121,4 @@ class Ticket extends Component {
   }
 }
 
-export default Ticket
+export default NewTicket
