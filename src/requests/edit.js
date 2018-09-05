@@ -83,15 +83,18 @@ class EditTicket extends Component {
 	newUser(event) {
 		this.setState({
 			redirect: <Redirect to={{
-				pathname: '/admin/newUser',
+				pathname: '/admin/user',
 				state: {
-					data: {
-						user: jwt.decode(localStorage.getItem('access token')).id,
+					ticket: {
 						for: this.state.for,
-						kind: 'NewUser'
+						user: this.state.user,
+						kind: 'NewUser',
+						priority: this.state.priority,
+						status: this.state.status,
+						log: {...this.state.log}
 					},
-					info: this.state.info,
-					log: this.state.log
+					user: jwt.decode(localStorage.getItem('access token')).id,
+					info: {...this.state.info}
 				}
 			}} />
 		})
@@ -104,7 +107,6 @@ class EditTicket extends Component {
 	}
 
   render() {
-		console.log(this.props)
 		let kind
 		switch(this.state.kind) {
 			case 'Access':
@@ -141,8 +143,8 @@ class EditTicket extends Component {
 						handleChange={this.change}
 						placeholder='Notes'
 					/>
-					<button type="submit" value="Submit">Submit</button>
-					{this.state.kind === 'New User'&& <button onClick={this.newUser} value="Create User">Create User</button>}
+				{this.state.kind !== 'New User' && <button type="submit" value="Submit">Submit</button> }
+					{this.state.kind === 'New User' && <button onClick={this.newUser} value="Create User">Create User</button> }
 					<button onClick={this.cancel} value="Cancel">Cancel</button>
 					<br />
 					<h2>Edit Request Ticket</h2>
@@ -189,8 +191,8 @@ class EditTicket extends Component {
 					/>
 				{kind}
 				<br />
-				<button type="submit" value="Submit">Submit</button>
-				{this.state.kind === 'New User'&& <button onClick={this.newUser} value="Create User">Create User</button>}
+				{this.state.kind !== 'New User' && <button type="submit" value="Submit">Submit</button> }
+				{this.state.kind === 'New User' && <button onClick={this.newUser} value="Create User">Create User</button>}
 				<button onClick={this.cancel} value="Cancel">Cancel</button>
 				</form>
 			</div>

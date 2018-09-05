@@ -19,8 +19,7 @@ class InventoryList extends Component {
 	}
 
 	componentDidMount() {
-		const url = (this.state.user.role === 'Admin' ? 'inv' : 'me/inv')
-    axios.get(`http://api.ems.test/${url}`, {
+    axios.get(`http://api.ems.test/inv`, {
 			method: "get",
 			headers: {token: 'JWT '+localStorage.getItem('access token')},
 			withCredentials: 'include'
@@ -51,7 +50,9 @@ class InventoryList extends Component {
 			data: {
 				inv: {
 					available: false,
-					owner: this.state.user._id
+					owner: this.state.user.id,
+					location: 'Room '+this.state.user.room,
+					borrowed: Date.now()
 				},
 				item: {},
 				log: {
@@ -81,7 +82,9 @@ class InventoryList extends Component {
 			data: {
 				inv: {
 					available: true,
-					owner: '599c7ba76cd8a107bf6d4c13'
+					owner: '599c7ba76cd8a107bf6d4c13',
+					location: 'Room 3628',
+					returned: Date.now()
 				},
 				item: {},
 				log: {
@@ -105,7 +108,7 @@ class InventoryList extends Component {
   }
 
   render() {
-		const type = (this.state.user.role ==='Admin'?'admin':'list')
+		const type = (this.state.user.role ==='admin'?'admin':'list')
 		return (
 			<div>
 				{ this.state.redirect && this.state.redirect }

@@ -6,8 +6,10 @@ import InventoryList from './inventory/list'
 import AddInventory from './inventory/new'
 import EditInventory from './inventory/edit'
 
-import Account from './user/account'
+//import Account from './user/account'
+import Dashboard from './user/dashboard'
 import AdminNewUser from './admin/user'
+import AdminNewEquipment from './admin/equipment'
 
 import NewTicket from './requests/new'
 import EditTicket from './requests/edit'
@@ -43,7 +45,7 @@ class Home extends Component {
 			return (<Redirect to={'/login'} />)
 		} else {
 			return (
-				<div>
+				<div className='wrapper'>
 	        <header className="App-header">
 	          <img src={logo} className="App-logo" alt="logo" />
 	          <h1 className="App-title">Welcome {this.state.user.first} {this.state.user.last}</h1>
@@ -54,14 +56,13 @@ class Home extends Component {
 							{this.state.user.role === 'Admin' && <Link to="/tickets/">Staff Requests</Link>}
 							{this.state.user.role !== 'Admin' && <Link to="/tickets/new">Submit Request</Link>}
 							{this.state.user.role !== 'Admin' && <Link to="/tickets">View Tickets</Link>}
+							<a onClick={this.logout}>Log Out</a>
 						</nav>
 	        </header>
-					<br />
-					<button onClick={this.logout}>Log Out</button>
-					<br />
 
 	        <Switch>
-						<Route path="/admin/newUser" component={AdminNewUser}/>
+						<Route path="/admin/user" component={AdminNewUser}/>
+						<Route path="/admin/equipment" component={AdminNewEquipment}/>
 
 						<Route path="/inventory/edit" component={EditInventory}/>
 						<Route path="/inventory/new" component={AddInventory}/>
@@ -71,7 +72,7 @@ class Home extends Component {
 						<Route path="/tickets/new" component={NewTicket}/>
 						<Route path="/tickets" component={TicketList}/>
 
-	          <Route path="/" component={Account}/>
+	          <Route path="/" component={Dashboard}/>
 	        </Switch>
 				</div>
 	    )

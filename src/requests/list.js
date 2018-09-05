@@ -47,11 +47,22 @@ class Tickets extends Component {
 		})
 	}
 
-	seen(ticket, index) {
-		axios({
-			method: "put",
-			url: `http://api.ems.test/tickets/${ticket._id}`,
-			data: {
+	seen(ticket, index, reopen) {
+		let changedData
+		if (reopen) {
+			changedData = {
+				ticket:{
+					status: 'Reopened'
+				},
+				info: {},
+				log: {
+					type: 'Quick Reopen',
+					staff: this.state.user.first+' '+this.state.user.last,
+					note: "Reopened Closed or Completed Request"
+				}
+			}
+		} else {
+			changedData = {
 				ticket:{
 					status: 'Seen'
 				},
@@ -61,7 +72,12 @@ class Tickets extends Component {
 					staff: this.state.user.first+' '+this.state.user.last,
 					note: "Marked Seen"
 				}
-			},
+			}
+		}
+		axios({
+			method: "put",
+			url: `http://api.ems.test/tickets/${ticket._id}`,
+			data: changedData,
 			headers: {token: 'JWT '+localStorage.getItem('access token')},
 			withCredentials: 'include'
 		})
@@ -105,7 +121,6 @@ class Tickets extends Component {
 			ticketData.user = newTickets[index].user
 			newTickets[index] = ticketData
 			newTickets[index].info = res.data.data[1]
-			console.log(res.data)
       this.setState({
 				tickets: newTickets
 			})

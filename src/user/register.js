@@ -12,6 +12,7 @@ class Register extends Component {
 		this.state = {
 			username: this.props.username ? this.props.username : '',
 		  password: this.props.password ? this.props.password : '',
+		  role: this.props.role ? this.props.role : 'Staff',
 		  email: this.props.email ? this.props.email : '',
 		  phone: this.props.phone ? this.props.phone : '',
 		  first: this.props.first ? this.props.first : '',
@@ -22,6 +23,7 @@ class Register extends Component {
 			errors: {
 				username: '',
 			  password: '',
+			  role: '',
 			  email: '',
 			  phone: '',
 			  first: '',
@@ -44,7 +46,7 @@ class Register extends Component {
 		for (const key in errors) {
 			if(errors[key]) {
 				success = false
-			} else if (errors[key]==='') {
+			} else if (errors[key]==='' && !this.state[key]) {
 				success = false
 				errors[key] = true
 		    this.setState({
@@ -102,18 +104,45 @@ class Register extends Component {
 		if (!validated) {
 			alert('Not all fields were filled correctly. Please double check your information and try again.')
 		} else {
-			if (this.props.type==='Admin') {
-				alert('Whoo!')
+			const user = {
+				username: this.state.username,
+			  password: this.state.password,
+			  role: this.state.role,
+			  email: this.state.email,
+			  phone: this.state.phone,
+			  first: this.state.first,
+			  last: this.state.last,
+			  program: this.state.program,
+			  super: this.state.super,
+			  room: this.state.room,
 			}
 			axios(`http://api.ems.test/user`, {
 				method: "post",
-				data: this.state.data,
+				data: user,
 				withCredentials: 'include'
 			})
 	    .then(res => {
-				this.setState({
-					registered: true
-				})
+				if (this.props.type === 'Admin') {
+					this.setState({
+						registered: <Redirect to={{
+							pathname: '/admin/equipment',
+							state: {
+								ticket: this.props.ticket,
+								user: res.data.data,
+								start: this.props.start,
+								access: this.props.access,
+								software: this.props.software,
+								hardware: this.props.hardware,
+								account: this.props.account,
+								other: this.props.other
+							}
+						}} />
+					})
+				} else {
+					this.setState({
+						registered: <Redirect to={{pathname: '/login'}}/>
+					})
+				}
 	    })
 			.catch(error => {
 		    alert(error)
@@ -124,7 +153,7 @@ class Register extends Component {
   render() {
     return (
 			<div>
-				{this.state.registered && <Redirect to={{pathname: '/login'}}/>}
+				{this.state.registered && this.state.registered}
 				Fill this out:
 
 				<form onSubmit={this.submit}>
@@ -147,6 +176,16 @@ class Register extends Component {
 						value={this.state.password}
 						handleChange={this.change}
 						placeholder='Password'
+					/>
+					<Select
+						title='Role:'
+						name='role'
+						error={this.state.errors.role}
+						options={['Admin', 'Staff', 'Student', 'Temp', 'Other']}
+						disabled={this.props.role && true}
+						value={this.state.role}
+						handleChange={this.change}
+						placeholder='Select One'
 					/>
 					<Input
 						title='First Name'

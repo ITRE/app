@@ -13,7 +13,7 @@ import Accessory from './sub/accessory.js'
 
 //const jwt = require('jsonwebtoken')
 
-class NewInventory extends Component {
+class PurchaseInventory extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -30,20 +30,6 @@ class NewInventory extends Component {
     this.submit = this.submit.bind(this)
     this.setInfo = this.setInfo.bind(this)
     this.change = this.change.bind(this)
-	}
-
-  componentDidMount() {
-		if(this.props.owner) {
-			if (this.props.owner.role === 'Student') {
-				this.setState({
-					owner: this.props.owner.super._id
-				})
-			} else {
-				this.setState({
-					owner: this.props.owner._id
-				})
-			}
-		}
 	}
 
 	change(event) {
@@ -75,13 +61,9 @@ class NewInventory extends Component {
 			item: this.state.item
 		})
     .then(res => {
-			if (this.props.owner) {
-				this.props.pushNew(res.data.data)
-			} else {
-				this.setState({
-					finished: <Redirect to={'/inventory/'} />
-				})
-			}
+			this.setState({
+				finished: <Redirect to={'/inventory/'} />
+			})
     })
     .catch(error => {
       alert(error)
@@ -110,6 +92,7 @@ class NewInventory extends Component {
     return (
 			<div>
 				{this.state.finished && this.state.finished}
+
 				<form className='form' onSubmit={this.submit}>
 					<Users
 						title='Owner'
@@ -173,4 +156,4 @@ class NewInventory extends Component {
   }
 }
 
-export default NewInventory
+export default PurchaseInventory

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import Item from '../sub/item'
+import Item from '../inventory/sub/item'
 
 const jwt = require('jsonwebtoken')
 

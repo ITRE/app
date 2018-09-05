@@ -6,6 +6,7 @@ class Request extends Component {
 		super(props)
     this.edit = this.edit.bind(this)
     this.seen = this.seen.bind(this)
+    this.reopen = this.reopen.bind(this)
     this.complete = this.complete.bind(this)
 	}
 
@@ -17,6 +18,10 @@ class Request extends Component {
 		this.props.seen(this.props.ticket, this.props.ind)
 	}
 
+	reopen() {
+		this.props.seen(this.props.ticket, this.props.ind, 'reopen')
+	}
+
 	complete() {
 		this.props.complete(this.props.ticket, this.props.ind)
 	}
@@ -24,13 +29,14 @@ class Request extends Component {
 	render(){
 		const adminButtons = (
 			<div className="admin_buttons">
-				<button onClick={this.edit}>Work On Request</button>
-				<button onClick={this.seen}>Mark Seen</button>
-				<button onClick={this.complete}>Mark Complete</button>
+				{ (this.props.ticket.status !== 'Completed' && this.props.ticket.status !== 'Closed') && <button onClick={this.edit}>Work On Request</button> }
+				{ this.props.ticket.status === 'New' && <button onClick={this.seen}>Mark Seen</button> }
+				{ this.props.ticket.status === 'Completed' && <button onClick={this.seen}>Reopen</button> }
+				{ this.props.ticket.status !== 'Completed' && <button onClick={this.complete}>Mark Complete</button> }
 			</div>
 		)
 		const adminInfo = (
-			<div className="amin_info">
+			<div className="admin_info">
 				<p>Submitted by: {this.props.ticket.user.first} {this.props.ticket.user.last}</p>
 				<p>Priority: {this.props.ticket.priority}</p>
 				<p>Status: {this.props.ticket.status}</p>
@@ -42,7 +48,7 @@ class Request extends Component {
 				<p>Ticket for: {this.props.ticket.for}</p>
 				<p>Submitted on: {moment(this.props.ticket.added).format('MMMM Do YYYY, h:mm a')}</p>
 				<p>Kind: {this.props.ticket.kind}</p>
-				{this.props.ticket.completed  && <p>Completed on: {moment(this.props.ticket.completed).format('MMMM Do YYYY, h:mm a')}</p>}
+				{this.props.ticket.status === 'Completed'  && <p>Completed on: {moment(this.props.ticket.completed).format('MMMM Do YYYY, h:mm a')}</p>}
 				{ this.props.viewer.role === 'Admin' && adminButtons }
 	    </div>
 	  )
