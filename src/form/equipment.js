@@ -102,8 +102,8 @@ class EquipmentSelect extends Component {
 				<div className="form-group">
 					<label htmlFor='accessory' className="form-label">Accessories</label>
 						<div className="checkbox-group">
-							{this.state.accessory.length <= 0 && <p>No Accessories Currently Available</p>}
-			        { this.state.accessory
+							{this.state.accessories.length <= 0 && <p>No Accessories Currently Available</p>}
+			        { this.state.accessories
 								.filter((option => option.available))
 								.map(option => {
 				          return (

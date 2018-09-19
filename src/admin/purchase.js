@@ -2,155 +2,62 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import axios from 'axios'
 
-import Users from '../form/users.js'
-import Select from '../form/select.js'
-import Input from '../form/input.js'
-import Date from '../form/date.js'
-
-import Computer from './sub/computer.js'
-import Cord from './sub/cord.js'
-import Accessory from './sub/accessory.js'
-
-//const jwt = require('jsonwebtoken')
+import NewInventory from '../inventory/new.js'
 
 class PurchaseInventory extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			itreID: '',
-			serial: '',
-			bought: '',
-			project: '',
-			owner: '',
-			kind: '',
-			location: '',
-			item: {},
+			current: [],
+			new: [],
 			finished: false
 		}
     this.submit = this.submit.bind(this)
-    this.setInfo = this.setInfo.bind(this)
-    this.change = this.change.bind(this)
+    this.push = this.push.bind(this)
 	}
 
-	change(event) {
-		const value = event.target.value
-    const name = event.target.name
-    this.setState({
-			[name]: value
-		})
+	componentDidMount() {
+		if (this.props.location.state.newInv) {
+			this.setState({
+				new: this.props.location.state.newInv,
+				current: this.props.location.state.oldInv
+			})
+		}
 	}
 
-	setInfo(item) {
+	/*	oldInv: this.state.equipment,
+		newInv: this.state.newEquipment,
+		parent: this.props.location.state */
+
+	push(item) {
+		let old = [...this.state.current]
+		let newNew = [...this.state.new]
+
+		newNew.splice(newNew.indexOf(item), 1)
+		old.push(item)
 		this.setState({
-			item: item
+			new: newNew,
+			current: old
 		})
 	}
 
   submit(event) {
-		const newInv = {
-			itreID: this.state.itreID,
-			serial: this.state.serial,
-			bought: this.state.bought,
-			project: this.state.project,
-			owner: this.state.owner,
-			kind: this.state.kind,
-			location: this.state.location
-		}
-		axios.post(`http://api.ems.test/inv/`, {
-			inv: newInv,
-			item: this.state.item
-		})
-    .then(res => {
-			this.setState({
-				finished: <Redirect to={'/inventory/'} />
-			})
-    })
-    .catch(error => {
-      alert(error)
-    })
 
-		event.preventDefault()
   }
 
 
   render() {
+		const parentState = this.props.location.state.parent
 
-		let kind
-		switch(this.state.kind) {
-			case 'Computer':
-				kind = <Computer item={this.state.item} set={this.setInfo} />
-				break
-			case 'Cord':
-				kind = <Cord item={this.state.item} set={this.setInfo} />
-				break
-			case 'Accessory':
-				kind = <Accessory item={this.state.item} set={this.setInfo} />
-				break
-			default:
-				kind = ''
-		}
     return (
 			<div>
 				{this.state.finished && this.state.finished}
-
-				<form className='form' onSubmit={this.submit}>
-					<Users
-						title='Owner'
-						name='owner'
-						value={this.state.owner}
-						handleChange={this.change}
-						placeholder='Select One'
-					/>
-					<Select
-						title='Kind'
-						name='kind'
-						options={['Computer', 'Cord', 'Accessory']}
-						value={this.state.kind}
-						handleChange={this.change}
-						placeholder='Select One'
-					/>
-					<Input
-						title='ITRE ID'
-						name='itreID'
-						type='text'
-						value={this.state.itreID}
-						handleChange={this.change}
-						placeholder='ITRE 123'
-					/>
-					<Input
-						title='Serial Number'
-						name='serial'
-						type='text'
-						value={this.state.serial}
-						handleChange={this.change}
-						placeholder='Serial Number'
-					/>
-					<Date
-						title='When was this purchased?'
-						name='bought'
-						value={this.state.bought}
-						handleChange={this.change}
-					/>
-					<Input
-						title='Account Number'
-						name='project'
-						type='text'
-						value={this.state.project}
-						handleChange={this.change}
-						placeholder='Account Number'
-					/>
-					<Input
-						title='Location'
-						name='location'
-						type='text'
-						value={this.state.location}
-						handleChange={this.change}
-						placeholder='Room Number'
-					/>
-					{kind}
-					<br />
-					<input type="submit" value="Submit" />
-				</form>
+				<NewInventory
+					user={parentState.user}
+					new={this.state.new[0]}
+					account={parentState.account}
+					push={this.push}
+				/>
 			</div>
     )
   }

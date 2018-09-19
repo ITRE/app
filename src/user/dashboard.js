@@ -60,7 +60,6 @@ class Dashboard extends Component {
 		let ticketData
 
 		switch (user.role) {
-			case 'admin':
 			case 'Admin':
 				axios.get('http://api.ems.test/tickets', {
 					method: "get",
@@ -69,35 +68,35 @@ class Dashboard extends Component {
 				})
 				.then(res => {
 					ticketData = res.data.data
+
+					axios.get('http://api.ems.test/inv', {
+						method: "get",
+						headers: {
+							token: 'JWT '+token,
+							admin: 'borrowed'
+						},
+						withCredentials: 'include'
+					})
+					.then(res => {
+						this.setState({
+							tickets: ticketData.filter((ticket)=> (ticket.status !== 'Completed')),
+							inventory: res.data.data.filter((inv)=> (!inv.available)),
+							user: user
+						})
+					})
+					.catch(error => {
+						alert(error)
+					})
 				})
 				.catch(error => {
 					console.log(error)
 					alert(error)
 				})
-
-				axios.get('http://api.ems.test/inv', {
-					method: "get",
-					headers: {
-						token: 'JWT '+token,
-						admin: 'borrowed'
-					},
-					withCredentials: 'include'
-				})
-				.then(res => {
-					this.setState({
-						tickets: ticketData.filter((ticket)=> (ticket.status !== 'Completed')),
-						inventory: res.data.data.filter((inv)=> (!inv.available)),
-						user: user
-					})
-				})
-				.catch(error => {
-					alert(error)
-				})
 				break;
 			default:
-			this.setState({
-				user: user
-			})
+				this.setState({
+					user: user
+				})
 		}
 		return
   }

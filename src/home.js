@@ -9,10 +9,12 @@ import EditInventory from './inventory/edit'
 //import Account from './user/account'
 import Dashboard from './user/dashboard'
 import AdminNewUser from './admin/user'
-import AdminNewEquipment from './admin/equipment'
+import AdminAddEquipment from './admin/equipment'
+import PurchaseInventory from './admin/purchase'
 
 import NewTicket from './requests/new'
 import EditTicket from './requests/edit'
+import ReviewTicket from './requests/review'
 import TicketList from './requests/list'
 
 const jwt = require('jsonwebtoken')
@@ -62,12 +64,14 @@ class Home extends Component {
 
 	        <Switch>
 						<Route path="/admin/user" component={AdminNewUser}/>
-						<Route path="/admin/equipment" component={AdminNewEquipment}/>
+						<Route path="/admin/equipment" component={AdminAddEquipment}/>
 
 						<Route path="/inventory/edit" component={EditInventory}/>
+						<Route path="/inventory/purchase" component={PurchaseInventory}/>
 						<Route path="/inventory/new" component={AddInventory}/>
 						<Route path="/inventory" component={InventoryList}/>
 
+						<Route path="/tickets/review" component={ReviewTicket}/>
 						<Route path="/tickets/edit" component={EditTicket}/>
 						<Route path="/tickets/new" component={NewTicket}/>
 						<Route path="/tickets" component={TicketList}/>

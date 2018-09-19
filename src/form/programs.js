@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 
-class UserSelect extends Component {
+class ProgramSelect extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			users: []
+			programs: []
 		}
 	}
 
   componentDidMount() {
-    axios.get('http://api.ems.test/user')
+    axios.get('http://api.ems.test/programs')
     .then(res => {
       this.setState({
-        users: res.data.data
+        programs: res.data.data
       });
     })
     .catch(error => {
@@ -22,6 +22,7 @@ class UserSelect extends Component {
   }
 
   render() {
+		let value = this.props.value ? this.props.value : '5ba10e8bab1a991b9b327ab3'
     return(
       <div className="form-group">
 				<label htmlFor={this.props.name} style={this.props.error ? {color:'red'} : {}} className="form-label">
@@ -30,19 +31,19 @@ class UserSelect extends Component {
 	      </label>
         <select
           name={this.props.name}
-          value={this.props.value}
+          value={value}
           onChange={this.props.handleChange}
 					disabled={ this.props.disabled && 'disabled'}
           >
-          <option value="5ba2a0450a161d02ca25b959">None</option>
+          <option value="" disabled>{this.props.placeholder}</option>
           { this.props.extraOptions && this.props.extraOptions
             .map(option => (
               <option key={option} value={option}>{option}</option>
             ))
           }
-          { this.state.users
-            .map(user => (
-              <option key={user._id} value={this.props.string ? (user.first+' '+user.last) : user._id}>{user.first} {user.last}</option>
+          { this.state.programs
+            .map(program => (
+              <option key={program._id} value={program._id}>{program.name}</option>
             ))
           }
         </select>
@@ -51,4 +52,4 @@ class UserSelect extends Component {
   }
 }
 
-export default UserSelect
+export default ProgramSelect

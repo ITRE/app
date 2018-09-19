@@ -50,7 +50,7 @@ class InventoryList extends Component {
 			data: {
 				inv: {
 					available: false,
-					owner: this.state.user.id,
+					user: this.state.user.id,
 					location: 'Room '+this.state.user.room,
 					borrowed: Date.now()
 				},
@@ -82,7 +82,7 @@ class InventoryList extends Component {
 			data: {
 				inv: {
 					available: true,
-					owner: '599c7ba76cd8a107bf6d4c13',
+					user: '599c7ba76cd8a107bf6d4c13',
 					location: 'Room 3628',
 					returned: Date.now()
 				},

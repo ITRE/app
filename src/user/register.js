@@ -38,6 +38,7 @@ class Register extends Component {
 		this.validate = this.validate.bind(this)
     this.change = this.change.bind(this)
     this.submit = this.submit.bind(this)
+		this.cancel = this.cancel.bind(this)
 	}
 
 	validate() {
@@ -55,6 +56,12 @@ class Register extends Component {
 			}
 		}
 		return success
+	}
+
+	cancel() {
+		this.setState({
+			registered: <Redirect to={{pathname: '/'}}/>
+		})
 	}
 
   componentDidMount() {
@@ -116,37 +123,37 @@ class Register extends Component {
 			  super: this.state.super,
 			  room: this.state.room,
 			}
-			axios(`http://api.ems.test/user`, {
-				method: "post",
-				data: user,
-				withCredentials: 'include'
-			})
-	    .then(res => {
-				if (this.props.type === 'Admin') {
-					this.setState({
-						registered: <Redirect to={{
-							pathname: '/admin/equipment',
-							state: {
-								ticket: this.props.ticket,
-								user: res.data.data,
-								start: this.props.start,
-								access: this.props.access,
-								software: this.props.software,
-								hardware: this.props.hardware,
-								account: this.props.account,
-								other: this.props.other
-							}
-						}} />
-					})
-				} else {
-					this.setState({
-						registered: <Redirect to={{pathname: '/login'}}/>
-					})
-				}
-	    })
-			.catch(error => {
-		    alert(error)
-		  })
+			if (this.props.type === 'Admin') {
+				this.setState({
+					registered: <Redirect to={{
+						pathname: '/admin/equipment',
+						state: {
+							ticket: this.props.ticket,
+							user: user,
+							start: this.props.start,
+							access: this.props.access,
+							software: this.props.software,
+							hardware: this.props.hardware,
+							account: this.props.account,
+							other: this.props.other
+						}
+					}} />
+				})
+			} else {
+				axios(`http://api.ems.test/user`, {
+					method: "post",
+					data: user,
+					withCredentials: 'include'
+				})
+		    .then(res => {
+						this.setState({
+							registered: <Redirect to={{pathname: '/login'}}/>
+						})
+		    })
+				.catch(error => {
+			    alert(error)
+			  })
+			}
 		}
 	}
 
@@ -250,6 +257,7 @@ class Register extends Component {
 						placeholder='Select One'
 					/>
 	        <input type="submit" value="Submit" />
+					{ this.props.type==='Admin' && <button onClick={this.cancel}>Cancel</button> }
 	      </form>
 			</div>
     );

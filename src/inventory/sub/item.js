@@ -26,12 +26,12 @@ class Item extends Component {
   }
 
   info() {
-    const {item, itreID, owner, location, kind, available} = this.props.data
+    const {item, itreID, user, location, kind, available} = this.props.data
     // this.props.data
     alert(`
       ID: ${itreID}
-      Kind: ${kind}
-      Owner: ${owner.first} ${owner.last}
+      Kind: ${kind},
+      User: ${user.first} ${user.last}
       Room: ${location}
       Brand: ${item.brand}
       Model: ${item.model}
@@ -45,7 +45,8 @@ class Item extends Component {
   }
 
   dash() {
-    const {_id, owner, available, item} = this.props.data
+    const {_id, available, item} = this.props.data
+    const owner = this.props.data.user
     const user = jwt.decode(localStorage.getItem('access token'))
 
     if (user.role === 'Admin') {
@@ -74,36 +75,31 @@ class Item extends Component {
   }
 
   list() {
-    const {_id, itreID, owner, location, kind, available} = this.props.data
+    const {_id, itreID, location, kind, program, available} = this.props.data
+    const owner = (this.props.data.user.first === 'none' ? program.name : this.props.data.user.first+' '+this.props.data.user.last)
     const user = jwt.decode(localStorage.getItem('access token'))
+    const id = (user.role === 'Admin' ? <a style={{ flex: 2 }} onClick={ this.info }>{ itreID }</a> : <a style={{ flex: 2 }}>{ itreID }</a>)
+    let button
 
     if (user.role === 'Admin') {
-      return (<div key={_id} style={{display: 'flex', flexFlow: 'wrap row', margin: '0 10px'}}>
-        <a style={{ flex: 2 }} onClick={ this.info }>{ itreID }</a>
-        <p style={{ flex: 2 }}>{ kind }</p>
-        <p style={{ flex: 3 }}>{ owner.first } { owner.last }</p>
-        <p style={{ flex: 2 }}>{ location }</p>
-        <button style={{ flex: 1 }} onClick={ this.edit }>Edit</button>
-      </div>)
+      button = <button style={{ flex: 1 }} onClick={ this.edit }>Edit</button>
+    } else if (available) {
+      button = <button style={{ flex: 1 }} onClick={ this.checkOut }>Borrow</button>
+    } else if (owner._id === user.id) {
+      button = <button style={{ flex: 1 }} onClick={ this.checkIn }>Return</button>
     } else {
-      let button
-
-      if (available) {
-        button = <button style={{ flex: 1 }} onClick={ this.checkOut }>Borrow</button>
-      } else if (owner._id === user.id) {
-        button = <button style={{ flex: 1 }} onClick={ this.checkIn }>Return</button>
-      } else {
-        button = <button style={{ flex: 1 }} disabled >Unavailable</button>
-      }
-      return (<div key={_id} style={{display: 'flex', flexFlow: 'wrap row', margin: '0 10px'}}>
-        <a style={{ flex: 2 }}>{ itreID }</a>
-        <p style={{ flex: 2 }}>{ kind }</p>
-        <p style={{ flex: 3 }}>{ owner.first } { owner.last }</p>
-        <p style={{ flex: 2 }}>{ location }</p>
-        {button}
-      </div>)
+      button = <button style={{ flex: 1 }} disabled >Unavailable</button>
     }
 
+    return (
+      <div key={_id} style={{display: 'flex', flexFlow: 'wrap row', margin: '0 10px'}}>
+        { id }
+        <p style={{ flex: 2 }}>{ kind }</p>
+        <p style={{ flex: 3 }}>{ owner }</p>
+        <p style={{ flex: 2 }}>{ location }</p>
+        { button }
+      </div>
+    )
   }
 
 

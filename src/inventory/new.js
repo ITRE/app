@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom'
 import axios from 'axios'
 
 import Users from '../form/users.js'
+import Programs from '../form/programs.js'
 import Select from '../form/select.js'
 import Input from '../form/input.js'
 import Date from '../form/date.js'
@@ -21,10 +22,12 @@ class NewInventory extends Component {
 			serial: '',
 			bought: '',
 			project: '',
-			owner: '',
+			program: '',
+			user: '',
 			kind: '',
 			location: '',
 			item: {},
+			none: false,
 			finished: false
 		}
     this.submit = this.submit.bind(this)
@@ -33,16 +36,13 @@ class NewInventory extends Component {
 	}
 
   componentDidMount() {
-		if(this.props.owner) {
-			if (this.props.owner.role === 'Student') {
-				this.setState({
-					owner: this.props.owner.super._id
-				})
-			} else {
-				this.setState({
-					owner: this.props.owner._id
-				})
-			}
+		if(this.props.user) {
+			this.setState({
+				program: this.props.user.program,
+				location: this.props.user.room,
+				project: this.props.account,
+				none: true
+			})
 		}
 	}
 
@@ -66,33 +66,48 @@ class NewInventory extends Component {
 			serial: this.state.serial,
 			bought: this.state.bought,
 			project: this.state.project,
-			owner: this.state.owner,
+			program: this.state.program,
+			user: this.state.user,
 			kind: this.state.kind,
 			location: this.state.location
 		}
-		axios.post(`http://api.ems.test/inv/`, {
-			inv: newInv,
-			item: this.state.item
-		})
-    .then(res => {
-			if (this.props.owner) {
-				this.props.pushNew(res.data.data)
-			} else {
+
+		if(this.props.user) {
+			newInv.item = this.state.item
+			this.props.pushNew(newInv)
+			this.setState({
+				itreID: '',
+				serial: '',
+				bought: '',
+				project: '',
+				program: '',
+				user: '',
+				kind: '',
+				location: '',
+				item: {},
+			})
+			window.scrollTo(0, 0)
+		} else {
+			axios.post(`http://api.ems.test/inv/`, {
+				inv: newInv,
+				item: this.state.item
+			})
+	    .then(res => {
+				console.log(res.data.data)
 				this.setState({
 					finished: <Redirect to={'/inventory/'} />
 				})
-			}
-    })
-    .catch(error => {
-      alert(error)
-    })
+	    })
+	    .catch(error => {
+	      alert(error)
+	    })
+		}
 
 		event.preventDefault()
   }
 
 
   render() {
-
 		let kind
 		switch(this.state.kind) {
 			case 'Computer':
@@ -111,13 +126,21 @@ class NewInventory extends Component {
 			<div>
 				{this.state.finished && this.state.finished}
 				<form className='form' onSubmit={this.submit}>
-					<Users
+					<Programs
 						title='Owner'
-						name='owner'
-						value={this.state.owner}
+						name='program'
+						value={this.state.program}
 						handleChange={this.change}
 						placeholder='Select One'
 					/>
+				{ !this.state.none &&
+					<Users
+						title='User'
+						name='user'
+						value={this.state.user}
+						handleChange={this.change}
+						placeholder='Select One'
+					/> }
 					<Select
 						title='Kind'
 						name='kind'

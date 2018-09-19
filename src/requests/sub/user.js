@@ -5,6 +5,7 @@ import Input from '../../form/input.js'
 import Date from '../../form/date.js'
 import Select from '../../form/select.js'
 import Users from '../../form/users.js'
+import Program from '../../form/programs.js'
 import Checkbox from '../../form/checkbox.js'
 import Textarea from '../../form/textarea.js'
 
@@ -13,30 +14,52 @@ class NewUser extends Component {
 		super(props)
 		this.state = {
 			user: {
-				role: this.props.info.role ? this.props.info.role : '',
-				first: this.props.info.first ? this.props.info.first : '',
-				last: this.props.info.last ? this.props.info.last : '',
-				email: this.props.info.email ? this.props.info.email : '',
-				phone: this.props.info.phone ? this.props.info.phone : '',
-				program: this.props.info.program ? this.props.info.program : '',
-				super: this.props.info.super ? this.props.info.super : '',
-				room: this.props.info.room ? this.props.info.room : '',
-				start: this.props.info.start ? moment(this.props.info.start).format('YYYY-MM-DD') : '',
-				access: this.props.info.access ? this.props.info.access : '',
-				software: this.props.info.software ? this.props.info.software : [],
-				hardware: this.props.info.hardware ? this.props.info.hardware : [],
-				account: this.props.info.account ? this.props.info.account : '',
-				other: this.props.info.other ? this.props.info.other : ''
+				role: '',
+				first: '',
+				last: '',
+				email: '',
+				phone: '',
+				program: '',
+				super: '',
+				room: '',
+				start: '',
+				access: '',
+				software: [],
+				hardware: [],
+				account: '',
+				other: ''
 			},
 			supers: []
 		}
     this.change = this.change.bind(this)
 	}
 
+	componentDidMount() {
+		if (this.props.info) {
+			this.setState({
+				user: {
+					role: this.props.info.role ? this.props.info.role : '',
+					first: this.props.info.first ? this.props.info.first : '',
+					last: this.props.info.last ? this.props.info.last : '',
+					email: this.props.info.email ? this.props.info.email : '',
+					phone: this.props.info.phone ? this.props.info.phone : '',
+					program: this.props.info.program ? this.props.info.program : '',
+					super: this.props.info.super ? this.props.info.super : '',
+					room: this.props.info.room ? this.props.info.room : '',
+					start: this.props.info.start ? moment(this.props.info.start).format('YYYY-MM-DD') : '',
+					access: this.props.info.access ? this.props.info.access : '',
+					software: this.props.info.software ? this.props.info.software : [],
+					hardware: this.props.info.hardware ? this.props.info.hardware : [],
+					account: this.props.info.account ? this.props.info.account : '',
+					other: this.props.info.other ? this.props.info.other : ''
+				}
+			})
+		}
+	}
+
 	change(event) {
 		const value = event.target.value
     const name = event.target.name
-			console.log(value)
 		let user = {...this.state.user}
 		let newList
 		switch (name) {
@@ -104,10 +127,9 @@ class NewUser extends Component {
 					handleChange={this.change}
 					placeholder='(xxx) xxx-xxxx'
 				/>
-				<Select
+				<Program
 					title='Program:'
 					name='program'
-					options={['Administration', 'IT & Web', 'LTAP', 'Aviation', 'Bike / Ped', 'Econ / Policy', 'Highway Systems', 'Modeling / Comp', 'Port / Ferry', 'School Planning / Transpo', 'Transit', 'TIMS', 'Graphic Design', 'Other']}
 					value={this.state.user.program}
 					handleChange={this.change}
 					placeholder='Select One'

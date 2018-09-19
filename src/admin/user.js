@@ -29,6 +29,7 @@ class AdminNewUser extends Component {
 					phone={this.props.location.state.info.phone}
 					first={this.props.location.state.info.first}
 					last={this.props.location.state.info.last}
+					room={this.props.location.state.info.room}
 					program={this.props.location.state.info.program}
 					super={this.props.location.state.info.super}
 				/>

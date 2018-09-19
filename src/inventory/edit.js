@@ -4,6 +4,7 @@ import axios from 'axios'
 import moment from 'moment'
 
 import Users from '../form/users.js'
+import Programs from '../form/programs.js'
 import Select from '../form/select.js'
 import Input from '../form/input.js'
 import Date from '../form/date.js'
@@ -18,13 +19,14 @@ class EditInventory extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			itreID: this.props.location.state.inv.itreID,
-			serial: this.props.location.state.inv.serial,
-			bought: moment(this.props.location.state.inv.bought).format('YYYY-MM-DD'),
-			project: this.props.location.state.inv.project,
-			owner: this.props.location.state.inv.owner,
-			kind: this.props.location.state.inv.kind,
-			location: this.props.location.state.inv.location,
+			itreID: this.props.location.state.inv.itreID ? this.props.location.state.inv.itreID : '',
+			serial: this.props.location.state.inv.serial ? this.props.location.state.inv.serial : '',
+			bought: this.props.location.state.inv.bought ? moment(this.props.location.state.inv.bought).format('YYYY-MM-DD') : '',
+			project: this.props.location.state.inv.project ? this.props.location.state.inv.project : '',
+			program: this.props.location.state.inv.program ? this.props.location.state.inv.program : '5ba10e8bab1a991b9b327ab3',
+			user: this.props.location.state.inv.user._id ? this.props.location.state.inv.user._id : '5ba2a0450a161d02ca25b959',
+			kind: this.props.location.state.inv.kind ? this.props.location.state.inv.kind : '',
+			location: this.props.location.state.inv.location ? this.props.location.state.inv.location : '',
 			log: {
 				type: 'EditInventory',
 				staff: jwt.decode(localStorage.getItem('access token')).first+' '+jwt.decode(localStorage.getItem('access token')).last,
@@ -41,6 +43,7 @@ class EditInventory extends Component {
 	change(event) {
 		const value = event.target.value
     const name = event.target.name
+		console.log(value)
     this.setState({
 			[name]: value
 		})
@@ -58,7 +61,8 @@ class EditInventory extends Component {
 			serial: this.state.serial,
 			bought: this.state.bought,
 			project: this.state.project,
-			owner: this.state.owner,
+			program: this.state.program,
+			user: this.state.user,
 			kind: this.state.kind,
 			location: this.state.location
 		}
@@ -100,10 +104,17 @@ class EditInventory extends Component {
 				{this.state.finished && this.state.finished}
 
 				<form className='form' onSubmit={this.submit}>
-					<Users
+					<Programs
 						title='Owner'
-						name='owner'
-						value={this.state.owner}
+						name='program'
+						value={this.state.program}
+						handleChange={this.change}
+						placeholder='Select One'
+					/>
+					<Users
+						title='User'
+						name='user'
+						value={this.state.user}
 						handleChange={this.change}
 						placeholder='Select One'
 					/>
