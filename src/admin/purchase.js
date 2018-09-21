@@ -50,7 +50,7 @@ class PurchaseInventory extends Component {
 		const parentState = this.props.location.state.parent
 
     return (
-			<div>
+			<div className="main">
 				{this.state.finished && this.state.finished}
 				<NewInventory
 					user={parentState.user}

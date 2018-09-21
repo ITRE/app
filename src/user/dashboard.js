@@ -16,7 +16,8 @@ class Dashboard extends Component {
 			redirect: false
     }
 		this.checkIn = this.checkIn.bind(this)
-		this.edit = this.edit.bind(this)
+		this.editTicket = this.editTicket.bind(this)
+		this.editInv = this.editInv.bind(this)
 		this.seen = this.seen.bind(this)
 		this.complete = this.complete.bind(this)
   }
@@ -59,49 +60,51 @@ class Dashboard extends Component {
     const user = jwt.decode(token)
 		let ticketData
 
-		switch (user.role) {
-			case 'Admin':
-				axios.get('http://api.ems.test/tickets', {
-					method: "get",
-					headers: {token: 'JWT '+token},
-					withCredentials: 'include'
-				})
-				.then(res => {
-					ticketData = res.data.data
+		axios.get('http://api.ems.test/tickets', {
+			method: "get",
+			headers: {token: 'JWT '+token},
+			withCredentials: 'include'
+		})
+		.then(res => {
+			ticketData = res.data.data
 
-					axios.get('http://api.ems.test/inv', {
-						method: "get",
-						headers: {
-							token: 'JWT '+token,
-							admin: 'borrowed'
-						},
-						withCredentials: 'include'
-					})
-					.then(res => {
+			axios.get('http://api.ems.test/inv', {
+				method: "get",
+				headers: {
+					token: 'JWT '+token,
+					admin: 'borrowed'
+				},
+				withCredentials: 'include'
+			})
+			.then(res => {
+				switch(user.role) {
+					case 'Admin':
 						this.setState({
 							tickets: ticketData.filter((ticket)=> (ticket.status !== 'Completed')),
 							inventory: res.data.data.filter((inv)=> (!inv.available)),
 							user: user
 						})
-					})
-					.catch(error => {
-						alert(error)
-					})
-				})
-				.catch(error => {
-					console.log(error)
-					alert(error)
-				})
-				break;
-			default:
-				this.setState({
-					user: user
-				})
-		}
-		return
+						break
+					default:
+						this.setState({
+							tickets: ticketData.filter((ticket)=> (ticket.user.username === user.username)),
+							inventory: res.data.data.filter((inv)=> (inv.user.username === user.username)),
+							user: user
+						})
+						break
+				}
+			})
+			.catch(error => {
+				alert(error)
+			})
+		})
+		.catch(error => {
+			console.log(error)
+			alert(error)
+		})
   }
 
-	edit(ticket) {
+	editTicket(ticket) {
 		if (ticket.kind === 'NewUser') {
 			ticket.kind = 'New User'
 		}
@@ -109,6 +112,15 @@ class Dashboard extends Component {
 			redirect: <Redirect to={{
 				pathname: '/tickets/edit',
 				state: {ticket: ticket}
+			}} />
+		})
+	}
+
+	editInv(item) {
+		this.setState({
+			redirect: <Redirect to={{
+				pathname: '/inventory/edit',
+				state: {inv: item}
 			}} />
 		})
 	}
@@ -198,10 +210,12 @@ class Dashboard extends Component {
 
   render() {
     return (
-			<div className="main" style={{display:'flex', justify: 'space-between'}}>
+			<div className="main flex">
 				{ this.state.redirect && this.state.redirect }
+				<h1 className='full-column'>Welcome {this.state.user.first} {this.state.user.last}</h1>
+
 				<div className="main-column">
-	         <p>Requests</p>
+	         <h2>Active Requests</h2>
 					 { this.state.tickets.length > 0 &&
 						 this.state.tickets.map((ticket, index) => (
 							 <Request
@@ -209,7 +223,7 @@ class Dashboard extends Component {
 								ticket={ticket}
 								ind={index}
 								viewer={this.state.user}
-								edit={this.edit}
+								edit={this.editTicket}
 								seen={this.seen}
 								complete={this.complete}
 								/>)
@@ -218,8 +232,9 @@ class Dashboard extends Component {
 						{ this.state.tickets.length <= 0 && 'You have no active requests at the moment.' }
 					</div>
 				<div className="side-column">
-					<p>Equipment</p>
-						{ this.state.inventory
+					<h2>Equipment in Use</h2>
+						{ this.state.inventory.length > 0 &&
+ 						 this.state.inventory
 							.sort((a,b) => {
 								const order = { Computer: 1, Cord: 2, Accessory: 3 }
 								return order[a.kind] - order[b.kind]
@@ -232,10 +247,11 @@ class Dashboard extends Component {
 									position={index}
 									checkOut={this.checkOut}
 									checkIn={this.checkIn}
-									edit={this.edit}
+									edit={this.editInv}
 									/>
 							))
 						}
+						{ this.state.inventory.length <= 0 && 'You have no equipment at the moment.' }
 				</div>
 			</div>
     )

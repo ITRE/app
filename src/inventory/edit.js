@@ -100,8 +100,9 @@ class EditInventory extends Component {
 				kind = ''
 		}
     return (
-			<div>
+			<div className="main">
 				{this.state.finished && this.state.finished}
+				<h1>Edit Inventory</h1>
 
 				<form className='form' onSubmit={this.submit}>
 					<Programs

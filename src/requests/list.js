@@ -20,15 +20,27 @@ class Tickets extends Component {
 
 	componentDidMount() {
 		const url = (this.state.user.role === 'Admin' ? 'tickets' : 'me/tickets')
-    axios.get(`http://api.ems.test/${url}`, {
+    axios.get('http://api.ems.test/tickets', {
 			method: "get",
 			headers: {token: 'JWT '+localStorage.getItem('access token')},
 			withCredentials: 'include'
 		})
     .then(res => {
-      this.setState({
-				tickets: res.data.data
-			})
+			console.log(res.data.data)
+			switch(this.state.user.role) {
+				case 'Admin':
+					this.setState({
+						tickets: res.data.data
+					})
+					break
+				default:
+					this.setState({
+						tickets: res.data.data.filter((ticket)=> (
+							ticket.user.username === this.state.user.username || ticket.for === this.state.user.first+' '+this.state.user.last
+						))
+					})
+					break
+			}
     })
 		.catch(error => {
 			alert(error)
@@ -87,7 +99,6 @@ class Tickets extends Component {
 			ticketData.user = newTickets[index].user
 			newTickets[index] = ticketData
 			newTickets[index].info = res.data.data[1]
-			console.log(res.data)
       this.setState({
 				tickets: newTickets
 			})
@@ -132,9 +143,10 @@ class Tickets extends Component {
 
   render() {
 		return (
-			<div>
+			<div className="main">
+				<h1>Requests</h1>
 				{ this.state.redirect && this.state.redirect }
-				{ !this.state.redirect &&
+				{ this.state.tickets.length > 0 &&
 					this.state.tickets
 					.map( (ticket, index) => {
 						return (
@@ -150,6 +162,7 @@ class Tickets extends Component {
 						)
 					})
 				}
+				{ this.state.tickets.length <= 0 && <p>You have not submitted any requests</p>}
 			</div>
     );
   }

@@ -5,21 +5,35 @@ class UserSelect extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			users: []
+			users: [],
+			isLoading: false
 		}
+		this.signal = axios.CancelToken.source()
 	}
 
-  componentDidMount() {
-    axios.get('http://api.ems.test/user')
-    .then(res => {
-      this.setState({
-        users: res.data.data
-      });
-    })
-    .catch(error => {
-      alert(error)
-    })
-  }
+	componentDidMount() {
+		this.onLoadUser();
+	}
+
+	componentWillUnmount() {
+		this.signal.cancel('Api is being canceled');
+	}
+
+	onLoadUser = async () => {
+		try {
+			this.setState({ isLoading: true });
+			const response = await axios.get('http://api.ems.test/user', {
+				cancelToken: this.signal.token,
+			})
+			this.setState({ users: response.data.data, isLoading: true });
+		} catch (err) {
+			if (axios.isCancel(err)) {
+				//console.log('Error: ', err.message); // => prints: Api is being canceled
+			} else {
+				this.setState({ isLoading: false });
+			}
+		}
+	 }
 
   render() {
     return(

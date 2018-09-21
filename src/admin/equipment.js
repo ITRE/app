@@ -8,7 +8,7 @@ class AdminNewEquipment extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			equipment: [],
+			equipment: {},
 			currentEquipment: [],
 			newEquipment: [],
 			cancel: false
@@ -22,17 +22,19 @@ class AdminNewEquipment extends Component {
 
 	change(event) {
 		const value = event.target.value
+    const name = event.target.name
 		let equipment = [...this.state.currentEquipment]
-		let list = [...this.state.equipment]
-		if(equipment.includes(value)) {
+		let list = {...this.state.equipment}
+		if(equipment.indexOf(value) !== -1) {
+				delete list[value]
 			equipment.splice(equipment.indexOf(value), 1)
-			list.splice(list.indexOf(value), 1)
 		} else {
+			list[value] = name
 			equipment.push(value)
-			list.push(value)
 		}
 		this.setState({
-			equipment: equipment
+			equipment: list,
+			currentEquipment: equipment
 		})
 	}
 
@@ -43,12 +45,14 @@ class AdminNewEquipment extends Component {
 	}
 
 	pushNew(inv) {
+		console.log(inv)
 		let equipment = [...this.state.newEquipment]
-		let list = [...this.state.equipment]
+		let list = {...this.state.equipment}
+		list[inv.itreID] = inv.item.brand+' '+inv.item.type
 		equipment.push(inv)
-		list.push(inv.itreID)
 		this.setState({
-			newEquipment: equipment
+			newEquipment: equipment,
+			equipment: list
 		})
 	}
 /*
@@ -67,17 +71,13 @@ other: this.props.other
 				pathname: '/tickets/review',
 				state: {
 					ticket: this.props.location.state.ticket,
-					info: {
-						oldInv: this.state.oldEquipment,
+					inventory: {
+						oldInv: this.state.currentEquipment,
 						newInv: this.state.newEquipment,
-						inv: this.state.equipment,
-						user: this.props.location.state.user,
-						hardware: this.props.location.state.hardware,
-						software: this.props.location.state.software,
-						account: this.props.location.state.account,
-						start: this.props.location.state.start,
-						access: this.props.location.state.access
-					}
+						inv: this.state.equipment
+					},
+					user: this.props.location.state.user,
+					info: this.props.location.state.info
 				}
 			}}/>
 		})
@@ -107,18 +107,18 @@ other: this.props.other
 			}
 		}
 
-		parentState.hardware.map(item => {
+		parentState.info.hardware.map(item => {
 			switch(item) {
 				case ('Desktop Computer' || 'Laptop Computer' || 'Tablet / Mobile Computer' || 'Other'):
-					value.computer = this.state.equipment
+					value.computer = this.state.currentEquipment
 					multiple.computer = true
 					/* falls through */
 				case ('Extra Monitor' || 'Phone Connection' || 'Printer' || 'Other'):
-					value.cord = this.state.equipment
+					value.cord = this.state.currentEquipment
 					multiple.cord = true
 					/* falls through */
 				case ('Desktop Computer' || 'Laptop Computer' || 'Tablet / Mobile Computer' || 'Extra Monitor' || 'Phone Connection' || 'Printer' || 'Other'):
-					value.accessory = this.state.equipment
+					value.accessory = this.state.currentEquipment
 					multiple.accessory = true
 					/* falls through */
 				default:
@@ -144,7 +144,7 @@ other: this.props.other
 						<h3>Purchase Equipment for New User</h3>
 		        <NewInventory
 							user={parentState.user}
-							account={parentState.account}
+							account={parentState.info.account}
 							pushNew={this.pushNew}
 						/>
 					</div>
@@ -155,22 +155,13 @@ other: this.props.other
 						<h2>Equipment</h2>
 							<button onClick={this.review}>Review and Complete</button>
 							<button onClick={this.cancel}>Cancel</button>
-						{this.state.equipment.length > 0 &&
-							<div>
-								{this.state.equipment.map(item => <p key={item}>{item}</p>)}
-							</div>
-						}
-						{this.state.newEquipment.length > 0 &&
-							<div>
-								{this.state.newEquipment.map(item => <p key={item.serial}>{item.itreID}</p>)}
-							</div>
-						}
+							{ Object.keys(this.state.equipment).map((key, index) => <p key={index}><strong>{key}: </strong>{this.state.equipment[key]}</p>) }
 					</div>
 					<div>
 							<h3>Requested Hardware</h3>
-							{parentState.hardware.map(item => <p key={item}>{item}</p>)}
+							{parentState.info.hardware.map(item => <p key={item}>{item}</p>)}
 							<h3>Requested Software</h3>
-							{parentState.software.map(item => <p key={item}>{item}</p>)}
+							{parentState.info.software.map(item => <p key={item}>{item}</p>)}
 					</div>
 					<div>
 						<h3>User Info</h3>

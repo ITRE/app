@@ -26,12 +26,13 @@ class Item extends Component {
   }
 
   info() {
-    const {item, itreID, user, location, kind, available} = this.props.data
+    const {item, itreID, user, program, location, kind, available} = this.props.data
+    const owner = (user.first === 'none' ? program.name : user.first+' '+user.last)
     // this.props.data
     alert(`
       ID: ${itreID}
-      Kind: ${kind},
-      User: ${user.first} ${user.last}
+      Kind: ${kind}
+      User: ${owner}
       Room: ${location}
       Brand: ${item.brand}
       Model: ${item.model}
@@ -45,30 +46,31 @@ class Item extends Component {
   }
 
   dash() {
-    const {_id, available, item} = this.props.data
-    const owner = this.props.data.user
+    const {_id, available, program, item} = this.props.data
+    const owner = (this.props.data.user.first === 'none' ? program.name : this.props.data.user.first+' '+this.props.data.user.last)
     const user = jwt.decode(localStorage.getItem('access token'))
+    let button
 
     if (user.role === 'Admin') {
       return (
-        <div key={_id} style={{display: 'flex', flexFlow: 'row', margin: '0 10px', justify: 'space-between', alignItems: 'center', textAlign: 'left'}}>
+        <div key={_id} className="line-item">
           <a onClick={ this.info }>{ item.brand } { item.model }</a>
-          <p>{ owner.first } { owner.last }</p>
-          <p>{moment(this.props.data.borrowed).format('MMM D h:mm a')}</p>
+          <p>{ owner }</p>
+          <p>{moment(this.props.data.borrowed).format('MMM D')}</p>
+          <button onClick={ this.edit }>Edit</button>
         </div>
       )
     } else {
-        let button
         if (available) {
           button = <button onClick={ this.checkOut }>Borrow</button>
-        } else if (owner._id === user.id) {
+        } else if (this.props.data.user.username === user.username) {
           button = <button onClick={ this.checkIn }>Return</button>
         } else {
           button = <button disabled >Unavailable</button>
         }
         return (<div key={_id} style={{display: 'flex', flexFlow: 'wrap row', margin: '0 10px'}}>
         <p>{ item.brand } { item.model }</p>
-        <p>{ owner.first } { owner.last }</p>
+        <p>{ owner }</p>
           {button}
         </div>)
     }
@@ -78,25 +80,25 @@ class Item extends Component {
     const {_id, itreID, location, kind, program, available} = this.props.data
     const owner = (this.props.data.user.first === 'none' ? program.name : this.props.data.user.first+' '+this.props.data.user.last)
     const user = jwt.decode(localStorage.getItem('access token'))
-    const id = (user.role === 'Admin' ? <a style={{ flex: 2 }} onClick={ this.info }>{ itreID }</a> : <a style={{ flex: 2 }}>{ itreID }</a>)
+    const id = (user.role === 'Admin' ? <a className="column" onClick={ this.info }>{ itreID }</a> : <a className="column">{ itreID }</a>)
     let button
 
     if (user.role === 'Admin') {
-      button = <button style={{ flex: 1 }} onClick={ this.edit }>Edit</button>
+      button = <button className="column" onClick={ this.edit }>Edit</button>
     } else if (available) {
-      button = <button style={{ flex: 1 }} onClick={ this.checkOut }>Borrow</button>
-    } else if (owner._id === user.id) {
-      button = <button style={{ flex: 1 }} onClick={ this.checkIn }>Return</button>
+      button = <button className="column" onClick={ this.checkOut }>Borrow</button>
+    } else if (this.props.data.user.username === user.username) {
+      button = <button className="column" onClick={ this.checkIn }>Return</button>
     } else {
-      button = <button style={{ flex: 1 }} disabled >Unavailable</button>
+      button = <button className="column" disabled >Unavailable</button>
     }
 
     return (
-      <div key={_id} style={{display: 'flex', flexFlow: 'wrap row', margin: '0 10px'}}>
+      <div key={_id} className="line-item">
         { id }
-        <p style={{ flex: 2 }}>{ kind }</p>
-        <p style={{ flex: 3 }}>{ owner }</p>
-        <p style={{ flex: 2 }}>{ location }</p>
+        <p className="column">{ kind }</p>
+        <p className="column">{ owner }</p>
+        <p className="column">{ location }</p>
         { button }
       </div>
     )

@@ -52,8 +52,8 @@ class EquipmentSelect extends Component {
 				<div className="form-group">
 					<label htmlFor='computers' className="form-label">Computers</label>
 						<div className="checkbox-group">
-							{this.state.computers.length <= 0 && <p>No Computers Currently Available</p>}
-			        { this.state.computers
+							{ this.state.computers.length <= 0 && <p>No Computers Currently Available</p>}
+			        { this.state.computers.length > 0 && this.state.computers
 								.filter((option => option.available))
 								.map(option => {
 				          return (
@@ -61,7 +61,7 @@ class EquipmentSelect extends Component {
 				              <input
 				                className="form-checkbox"
 				                id = 'computers'
-				                name='computers'
+				                name={option.item.brand+' '+option.item.type}
 				                onChange={ this.props.handleChange }
 				                value={option.itreID}
 				                disabled={ this.props.disabled ? 'disabled' : '' }
@@ -77,8 +77,8 @@ class EquipmentSelect extends Component {
 				<div className="form-group">
 					<label htmlFor='cords' className="form-label">Cords</label>
 						<div className="checkbox-group">
-							{this.state.cords.length <= 0 && <p>No Cords Currently Available</p>}
-			        { this.state.cords
+							{ this.state.cords.length <= 0 && <p>No Cords Currently Available</p>}
+			        { this.state.cords.length > 0 && this.state.cords
 								.filter((option => option.available))
 								.map(option => {
 				          return (
@@ -86,12 +86,12 @@ class EquipmentSelect extends Component {
 				              <input
 				                className="form-checkbox"
 				                id = 'cords'
-				                name='cords'
+				                name={option.item.brand+' '+option.item.type}
 				                onChange={ this.props.handleChange }
-				                value={option.type}
+				                value={option.itreID}
 				                disabled={ this.props.disabled ? 'disabled' : '' }
-				                checked={ this.props.value.cord.indexOf(option.type) !== -1 }
-				                type="checkbox" /> <strong>{option.type}</strong> {option.item.brand} {option.item.model}
+				                checked={ this.props.value.computer.indexOf(option.itreID) !== -1 }
+				                type="checkbox" /> <strong>{option.itreID}</strong> {option.item.brand} {option.item.model}
 				            </label>
 				          )
 				        })}
@@ -102,8 +102,8 @@ class EquipmentSelect extends Component {
 				<div className="form-group">
 					<label htmlFor='accessory' className="form-label">Accessories</label>
 						<div className="checkbox-group">
-							{this.state.accessories.length <= 0 && <p>No Accessories Currently Available</p>}
-			        { this.state.accessories
+							{ this.state.accessories.length <= 0 && <p>No Accessories Currently Available</p>}
+			        { this.state.accessories.length > 0 && this.state.accessories
 								.filter((option => option.available))
 								.map(option => {
 				          return (
@@ -111,12 +111,12 @@ class EquipmentSelect extends Component {
 				              <input
 				                className="form-checkbox"
 				                id = 'accessory'
-				                name='accessory'
+				                name={option.item.brand+' '+option.item.type}
 				                onChange={ this.props.handleChange }
-				                value={option.type}
+				                value={option.itreID}
 				                disabled={ this.props.disabled ? 'disabled' : '' }
-				                checked={ this.props.value.accessory.indexOf(option.itretypeID) !== -1 }
-				                type="checkbox" /> <strong>{option.type}</strong> {option.item.brand} {option.item.model}
+				                checked={ this.props.value.computer.indexOf(option.itreID) !== -1 }
+				                type="checkbox" /> <strong>{option.itreID}</strong> {option.item.brand} {option.item.model}
 				            </label>
 				          )
 				        })}

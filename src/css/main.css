@@ -1,0 +1,157 @@
+html,
+body {
+  box-sizing: border-box;
+  font-family:
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  "Roboto",
+  "Oxygen",
+  "Ubuntu",
+  "Cantarell",
+  "Fira Sans",
+  "Droid Sans",
+  "Helvetica Neue",
+  sans-serif;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+h1 {
+  color: #A9671B;
+  font-size: 2.369em;
+}
+
+h2 {
+  font-size: 1.777em;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: 1.333em;
+  font-weight: bold;
+}
+
+h4 {
+  color: #A9671B;
+  font-weight: bold;
+}
+
+
+p,
+a,
+button,
+input {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+a {
+  color: #A9671B;
+  font-weight: bold;
+}
+
+header {
+  background-color: #526179;
+}
+
+nav {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+}
+
+nav a {
+  align-self: center;
+  border: solid 5px #526179;
+  color: white;
+  display: block;
+  flex: 1;
+  padding: 50px  20px;
+  text-align: center;
+  text-decoration: none;
+}
+
+nav a:hover,
+button:hover {
+  background-color: white;
+  color: #A9671B;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+button {
+  background-color: #526179;
+  border: solid 2px #526179;
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: white;
+  padding: 8px 10px;
+  margin: 5px;
+}
+
+label {
+  margin-right: 5px;
+}
+
+.form-group {
+
+}
+
+.logo {
+  box-sizing: border-box;
+  padding: 0;
+  width: 100px;
+}
+
+.screen-reader {
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+
+.flex {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.main {
+  box-sizing: border-box;
+  justify-content: space-between;
+  padding: 5px 20px;
+  width: 100%;
+}
+
+.main-column {
+  box-sizing: border-box;
+  width: 63%;
+}
+
+.side-column {
+  box-sizing: border-box;
+  width: 35%;
+}
+
+.full-column {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.column {
+  min-width: 150px;
+}
+
+.line-item {
+  align-items: center;
+  border-bottom: 3px solid #A9671B;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  text-align: left;
+}

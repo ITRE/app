@@ -93,7 +93,6 @@ class NewInventory extends Component {
 				item: this.state.item
 			})
 	    .then(res => {
-				console.log(res.data.data)
 				this.setState({
 					finished: <Redirect to={'/inventory/'} />
 				})
@@ -123,7 +122,7 @@ class NewInventory extends Component {
 				kind = ''
 		}
     return (
-			<div>
+			<div className="main">
 				{this.state.finished && this.state.finished}
 				<form className='form' onSubmit={this.submit}>
 					<Programs

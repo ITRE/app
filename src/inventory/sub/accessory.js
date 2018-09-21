@@ -55,14 +55,6 @@ class Accessory extends Component {
 					handleChange={this.change}
 					placeholder='Select One'
 				/>
-				<Input
-					title='Power Source'
-					name='power'
-					type='text'
-					value={this.state.power}
-					handleChange={this.change}
-					placeholder='Power Source'
-				/>
 				<Select
 					title='Power Source'
 					name='power'

@@ -92,7 +92,7 @@ class NewTicket extends Component {
 		}
 
     return (
-			<div className='requests'>
+			<div className='requests main'>
 				{ this.state.redirect && this.state.redirect }
 				<form className='form' onSubmit={this.submit}>
 					<Users

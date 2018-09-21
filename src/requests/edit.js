@@ -24,11 +24,8 @@ class EditTicket extends Component {
 			kind: this.props.location.state.ticket.kind,
 			priority: this.props.location.state.ticket.priority,
 			status: this.props.location.state.ticket.status,
-			log: {
-				type: 'Edit',
-			  staff: jwt.decode(localStorage.getItem('access token')).first+' '+jwt.decode(localStorage.getItem('access token')).last,
-			  note: ''
-			},
+			log: [...this.props.location.state.ticket.log],
+			note: '',
 			info: {...this.props.location.state.ticket.info},
 			redirect: false,
 			addUser: false
@@ -56,17 +53,23 @@ class EditTicket extends Component {
 
   submit(event) {
 		const newTicket = {
-			user: jwt.decode(localStorage.getItem('access token')).id,
+			user: this.state.user._id,
 			for: this.state.for,
-			kind: this.state.kind
+			kind: this.state.kind,
+			priority: this.state.priority,
+			status: this.state.status,
+			info: this.state.info
 		}
 		if (this.state.kind === 'New User') {
 			newTicket.kind = 'NewUser'
 		}
-		axios.post(`http://api.ems.test/tickets/${this.props.location.state.ticket._id}`, {
+		axios.put(`http://api.ems.test/tickets/${this.props.location.state.ticket._id}`, {
 			ticket: newTicket,
-			info: this.state.info,
-			log: this.state.log
+			log: {
+				type: 'Edit',
+			  staff: jwt.decode(localStorage.getItem('access token')).first+' '+jwt.decode(localStorage.getItem('access token')).last,
+			  note: this.state.note
+			}
 		})
     .then(res => {
 			this.setState({
@@ -81,17 +84,24 @@ class EditTicket extends Component {
   }
 
 	newUser(event) {
+		let log = [...this.state.log]
+		log.push({
+			type: 'Edit',
+			staff: jwt.decode(localStorage.getItem('access token')).first+' '+jwt.decode(localStorage.getItem('access token')).last,
+			note: this.state.note
+		})
 		this.setState({
 			redirect: <Redirect to={{
 				pathname: '/admin/user',
 				state: {
 					ticket: {
 						for: this.state.for,
+						_id: this.props.location.state.ticket._id,
 						user: this.state.user,
 						kind: 'NewUser',
 						priority: this.state.priority,
 						status: this.state.status,
-						log: {...this.state.log}
+						log: log
 					},
 					user: jwt.decode(localStorage.getItem('access token')).id,
 					info: {...this.state.info}
@@ -132,14 +142,15 @@ class EditTicket extends Component {
 		}
 
     return (
-			<div className='requests'>
+			<div className='requests main'>
 				{ this.state.redirect && this.state.redirect }
+				<h1>Edit Request</h1>
 				{ this.state.addUser && this.state.addUser }
 				<form className='form' onSubmit={this.submit}>
 					<Textarea
 						title='Admin Notes'
-						name='log'
-						value={this.state.log.note}
+						name='note'
+						value={this.state.note}
 						handleChange={this.change}
 						placeholder='Notes'
 					/>

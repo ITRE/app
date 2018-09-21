@@ -124,18 +124,29 @@ class Register extends Component {
 			  room: this.state.room,
 			}
 			if (this.props.type === 'Admin') {
+				const info = {
+					role: this.state.role,
+					first: this.state.first,
+					last: this.state.last,
+					email: this.state.email,
+					phone: this.state.phone,
+					program: this.state.program,
+					super: this.state.super,
+					room: this.state.room,
+					start: this.props.start,
+					access: this.props.access,
+					software: this.props.software,
+					hardware: this.props.hardware,
+					account: this.props.account,
+					other: this.props.other,
+				}
 				this.setState({
 					registered: <Redirect to={{
 						pathname: '/admin/equipment',
 						state: {
 							ticket: this.props.ticket,
 							user: user,
-							start: this.props.start,
-							access: this.props.access,
-							software: this.props.software,
-							hardware: this.props.hardware,
-							account: this.props.account,
-							other: this.props.other
+							info: info
 						}
 					}} />
 				})

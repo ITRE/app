@@ -13,7 +13,7 @@ class AdminNewUser extends Component {
 
   render() {
     return (
-			<div className=''>
+			<div className='main'>
         <Register
 					type='Admin'
 					ticket={this.props.location.state.ticket}

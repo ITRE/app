@@ -49,11 +49,11 @@ class Home extends Component {
 			return (
 				<div className='wrapper'>
 	        <header className="App-header">
-	          <img src={logo} className="App-logo" alt="logo" />
-	          <h1 className="App-title">Welcome {this.state.user.first} {this.state.user.last}</h1>
-						<nav style={{display: 'flex', flexFlow: 'wrap row'}}>
+						<nav>
 							<Link to="/">Home</Link>
 							<Link to="/inventory">Inventory</Link>
+							{this.state.user.role === 'Admin' && <Link to="/">New User</Link>}
+			        <a className='logo'><span className="screen-reader">Logo link to Home</span></a>
 							{this.state.user.role === 'Admin' && <Link to="/inventory/new">New Inventory</Link>}
 							{this.state.user.role === 'Admin' && <Link to="/tickets/">Staff Requests</Link>}
 							{this.state.user.role !== 'Admin' && <Link to="/tickets/new">Submit Request</Link>}

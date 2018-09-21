@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom'
 import axios from 'axios'
 
 import Item from './sub/item'
+import Select from '../form/select.js'
 
 const jwt = require('jsonwebtoken')
 
@@ -11,11 +12,16 @@ class InventoryList extends Component {
 		super(props)
 		this.state = {
 			inventory: [],
+			ID: '',
+			kind: '',
+			owner: '',
+			available: '',
 			user: jwt.decode(localStorage.getItem('access token'))
 		}
 		this.checkOut = this.checkOut.bind(this)
 		this.checkIn = this.checkIn.bind(this)
 		this.edit = this.edit.bind(this)
+		this.change = this.change.bind(this)
 	}
 
 	componentDidMount() {
@@ -41,6 +47,30 @@ class InventoryList extends Component {
 				state: {inv: item}
 			}} />
 		})
+	}
+
+	change(event) {
+		const value = event.target.value
+    const name = event.target.name
+		console.log(value)
+    this.setState({
+			[name]: value
+		})
+	}
+
+	filters() {
+		return (
+			<div>
+				<Select
+					title='Kind'
+					name='kind'
+					options={['Computer', 'Cord', 'Accessory']}
+					value={this.state.kind}
+					handleChange={this.change}
+					placeholder='Select One'
+				/>
+			</div>
+		)
 	}
 
 	checkOut(index) {
@@ -110,17 +140,18 @@ class InventoryList extends Component {
   render() {
 		const type = (this.state.user.role ==='admin'?'admin':'list')
 		return (
-			<div>
+			<div className="main">
 				{ this.state.redirect && this.state.redirect }
+				<h1>Inventory</h1>
 				{ !this.state.redirect &&
 					<div>
-						<p>[filters]</p>
-							<div style={{display: 'flex', flexFlow: 'wrap row', margin: '0 10px'}}>
-				        <p style={{ flex: 2 }}><strong>ID</strong></p>
-				        <p style={{ flex: 2 }}><strong>Kind</strong></p>
-				        <p style={{ flex: 3 }}><strong>Owner</strong></p>
-				        <p style={{ flex: 2 }}><strong>Room</strong></p>
-				        <p style={{ flex: 1 }}><strong>Edit</strong></p>
+						{this.filters()}
+							<div className="flex">
+				        <p className="column"><strong>ID</strong></p>
+				        <p className="column"><strong>Kind</strong></p>
+				        <p className="column"><strong>Owner</strong></p>
+				        <p className="column"><strong>Room</strong></p>
+				        <p className="column"></p>
 							</div>
 							{ this.state.inventory
 								.sort((a,b) => {
