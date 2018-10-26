@@ -3,10 +3,6 @@ import React from 'react'
 const Input = (props) => {
   return (
     <div className="form-group">
-      <label htmlFor={props.name} style={props.error ? {color:'red'} : {}} className="form-label">
-        {props.title}
-        {props.message && <span style={{fontSize: '12px'}}><br />{props.message}</span>}
-      </label>
       <input
         className="form-input"
         id={props.name}
@@ -15,8 +11,11 @@ const Input = (props) => {
         value={props.value}
         disabled={ props.disabled ? 'disabled' : '' }
         onChange={props.handleChange}
-        placeholder={props.placeholder}
       />
+        <label htmlFor={props.name} style={props.error ? {color:'red'} : {}} className="form-label">
+          {props.title}
+        </label>
+      {props.message && <p className="subscript">{props.message}</p>}
     </div>
   )
 }

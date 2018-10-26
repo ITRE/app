@@ -32,6 +32,7 @@ class ProgramSelect extends Component {
         <select
           name={this.props.name}
           value={value}
+					className="selectBox"
           onChange={this.props.handleChange}
 					disabled={ this.props.disabled && 'disabled'}
           >

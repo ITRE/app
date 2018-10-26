@@ -1,0 +1,61 @@
+.checkbuttons {
+  align-items: center;
+  display: flex;
+  margin-bottom: 30px;
+
+  .checkbutton-group {
+    box-sizing: border-box;
+    flex: 1;
+    margin: 0;
+
+    .form-checkbox {
+      display: none;
+    }
+  }
+
+  .form-label {
+    margin-right: 30px;
+  }
+
+  .checkbutton-label {
+    border: solid 2px $blue;
+    border-left: 0;
+    box-sizing: border-box;
+    color: $blue;
+    cursor: pointer;
+    display: block;
+    flex: 1;
+    padding: 10px;
+    margin: 0;
+    text-align: center;
+
+    &:first-child {
+      border-left: solid 2px $blue;
+    }
+
+    &:hover {
+      background: $orange;
+      border: solid 2px $orange;
+      color: $white;
+    }
+  }
+
+  .form-checkbox {
+    visibility: hidden;
+    padding: 0;
+    margin: 0;
+    width: 0;
+
+    &:checked + .checkbutton-label {
+      background: $blue;
+      color: $white;
+      border: solid 2px $blue;
+
+      &:hover {
+        background: $orange;
+        border: solid 2px $orange;
+        color: $white;
+      }
+    }
+  }
+}

@@ -1,0 +1,89 @@
+.low-select {
+  display: flex;
+  margin: auto;
+
+  .selectInput {
+    visibility: hidden;
+    padding: 0;
+    margin: 0;
+    width: 0;
+
+    &:checked + .selectLabel {
+      background: $blue;
+      color: $white;
+      border: solid 2px $blue;
+
+      &:hover {
+        background: $orange;
+        border: solid 2px $orange;
+        color: $white;
+      }
+    }
+  }
+
+  .selectButtons {
+    flex: 1;
+
+    &:first-child .selectLabel {
+      border-left: solid 2px $blue;
+    }
+  }
+
+  .selectLabel {
+    border: solid 2px $blue;
+    border-left: 0;
+    box-sizing: border-box;
+    color: $blue;
+    cursor: pointer;
+    display: block;
+    padding: 10px 15px;
+    margin: 0;
+    text-align: center;
+    width: 100%;
+
+    &:hover {
+      background: $orange;
+      border: solid 2px $orange;
+      color: $white;
+    }
+  }
+}
+
+.select {
+  display: flex;
+  flex-flow: column;
+  margin: 15px auto 20px;
+}
+
+.selectBox {
+  background: url(../arrow.png) no-repeat 100% 0;
+  border: 1px solid $blue;
+  border-radius: 0;
+  box-sizing: border-box;
+  color: $black;
+  font-family: Muli;
+  cursor: pointer;
+  height: 29px;
+  overflow: hidden;
+  padding: 0 40px 0 10px;
+  width: 240px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  option {
+    background-color: $orange;
+  }
+
+  select {
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    height: 29px;
+    padding: 5px; /* If you add too much padding here, the options won't show in IE */
+    width: 268px;
+
+    &::-ms-expand {
+      display: none;
+    }
+  }
+}

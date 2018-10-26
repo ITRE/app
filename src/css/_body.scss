@@ -20,7 +20,7 @@ body {
 }
 
 h1 {
-  color: #A9671B;
+  color: $test;
   font-size: 2.369em;
 }
 
@@ -39,6 +39,12 @@ h4 {
   font-weight: bold;
 }
 
+h1,
+h2,
+h3,
+h4 {
+  margin: 1em 0;
+}
 
 p,
 a,
@@ -49,61 +55,27 @@ input {
 }
 
 a {
-  color: #A9671B;
+  color: $orange;
   font-weight: bold;
 }
 
-header {
-  background-color: #526179;
-}
-
-nav {
-  box-sizing: border-box;
-  display: flex;
-  justify-content: space-between;
-}
-
-nav a {
-  align-self: center;
-  border: solid 5px #526179;
-  color: white;
-  display: block;
-  flex: 1;
-  padding: 50px  20px;
-  text-align: center;
-  text-decoration: none;
-}
-
-nav a:hover,
-button:hover {
-  background-color: white;
-  color: #A9671B;
-  cursor: pointer;
-  text-decoration: underline;
+.subscript {
+  font-size: .75em;
 }
 
 button {
-  background-color: #526179;
-  border: solid 2px #526179;
+  background-color: $orange;
+  border: solid 2px $orange;
   border-radius: 5px;
   box-sizing: border-box;
   color: white;
   padding: 8px 10px;
   margin: 5px;
-}
 
-label {
-  margin-right: 5px;
-}
-
-.form-group {
-
-}
-
-.logo {
-  box-sizing: border-box;
-  padding: 0;
-  width: 100px;
+  &.primary {
+    background-color: $blue;
+    border: solid 2px $blue;
+  }
 }
 
 .screen-reader {

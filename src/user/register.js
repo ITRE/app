@@ -60,7 +60,7 @@ class Register extends Component {
 
 	cancel() {
 		this.setState({
-			registered: <Redirect to={{pathname: '/'}}/>
+			registered: <Redirect to={{pathname: '/login'}}/>
 		})
 	}
 
@@ -170,106 +170,121 @@ class Register extends Component {
 
   render() {
     return (
-			<div>
-				{this.state.registered && this.state.registered}
-				Fill this out:
+			<div className="wrapper">
+				<header className="App-header">
+					<nav>
+		        <div className='logo'>
+							<span className="screen-reader">Logo</span>
+							<img src="../logo.svg"></img>
+						</div>
+					</nav>
+        </header>
+				<div className="register">
+					{this.state.registered && this.state.registered}
 
-				<form onSubmit={this.submit}>
-					<Input
-						title='Username'
-						name='username'
-						type='text'
-						error={this.state.errors.username}
-						value={this.state.username}
-						handleChange={this.change}
-						placeholder='Username'
-					/>
-					<Input
-						title='Password'
-						name='password'
-						type='password'
-						error={this.state.errors.password}
-						criteria='password'
-						message='Must be at least 8 characters'
-						value={this.state.password}
-						handleChange={this.change}
-						placeholder='Password'
-					/>
-					<Select
-						title='Role:'
-						name='role'
-						error={this.state.errors.role}
-						options={['Admin', 'Staff', 'Student', 'Temp', 'Other']}
-						disabled={this.props.role && true}
-						value={this.state.role}
-						handleChange={this.change}
-						placeholder='Select One'
-					/>
-					<Input
-						title='First Name'
-						name='first'
-						type='text'
-						error={this.state.errors.first}
-						value={this.state.first}
-						handleChange={this.change}
-						placeholder='First Name'
-					/>
-					<Input
-						title='Last Name'
-						name='last'
-						type='text'
-						error={this.state.errors.last}
-						value={this.state.last}
-						handleChange={this.change}
-						placeholder='Last Name'
-					/>
-					<Input
-						title='Email'
-						name='email'
-						type='text'
-						error={this.state.errors.email}
-						value={this.state.email}
-						handleChange={this.change}
-						placeholder='Email'
-					/>
-					<Input
-						title='Phone Number'
-						name='phone'
-						type='text'
-						error={this.state.errors.phone}
-						value={this.state.phone}
-						handleChange={this.change}
-						placeholder='Phone Number'
-					/>
-					<Input
-						title='Room Number'
-						name='room'
-						type='text'
-						error={this.state.errors.room}
-						value={this.state.room}
-						handleChange={this.change}
-						placeholder='Room Number'
-					/>
-					<Users
-						title='Supervisor:'
-						name='super'
-						error={this.state.errors.super}
-						value={this.state.super}
-						handleChange={this.change}
-						placeholder='Select One'
-					/>
-					<Select
-						title='Program:'
-						name='program'
-						error={this.state.errors.program}
-						options={['Administration', 'IT & Web', 'LTAP', 'Aviation', 'Bike / Ped', 'Econ / Policy', 'Highway Systems', 'Modeling / Comp', 'Port / Ferry', 'School Planning / Transpo', 'Transit', 'TIMS', 'Graphic Design', 'Other']}
-						value={this.state.program}
-						handleChange={this.change}
-						placeholder='Select One'
-					/>
-	        <input type="submit" value="Submit" />
-					{ this.props.type==='Admin' && <button onClick={this.cancel}>Cancel</button> }
-	      </form>
+					<form onSubmit={this.submit}>
+						<section className="field-group">
+							<h2>Account</h2>
+							<Input
+								title='Username'
+								name='username'
+								type='text'
+								error={this.state.errors.username}
+								value={this.state.username}
+								handleChange={this.change}
+								placeholder='Username'
+							/>
+							<Input
+								title='Password'
+								name='password'
+								type='password'
+								error={this.state.errors.password}
+								criteria='password'
+								message='Must be at least 8 characters'
+								value={this.state.password}
+								handleChange={this.change}
+								placeholder='Password'
+							/>
+							<Select
+								title='Role:'
+								name='role'
+								error={this.state.errors.role}
+								options={['Admin', 'Staff', 'Student', 'Temp', 'Other']}
+								disabled={this.props.role && true}
+								value={this.state.role}
+								handleChange={this.change}
+								placeholder='Select One'
+							/>
+						</section>
+
+					<h2 className="field-group">Personal</h2>
+						<Input
+							title='First Name'
+							name='first'
+							type='text'
+							error={this.state.errors.first}
+							value={this.state.first}
+							handleChange={this.change}
+							placeholder='First Name'
+						/>
+						<Input
+							title='Last Name'
+							name='last'
+							type='text'
+							error={this.state.errors.last}
+							value={this.state.last}
+							handleChange={this.change}
+							placeholder='Last Name'
+						/>
+						<Input
+							title='Email'
+							name='email'
+							type='text'
+							error={this.state.errors.email}
+							value={this.state.email}
+							handleChange={this.change}
+							placeholder='Email'
+						/>
+						<Input
+							title='Phone Number'
+							name='phone'
+							type='text'
+							error={this.state.errors.phone}
+							value={this.state.phone}
+							handleChange={this.change}
+							placeholder='Phone Number'
+						/>
+					<h2 className="field-group">ITRE</h2>
+						<Input
+							title='Room Number'
+							name='room'
+							type='text'
+							error={this.state.errors.room}
+							value={this.state.room}
+							handleChange={this.change}
+							placeholder='Room Number'
+						/>
+						<Users
+							title='Supervisor:'
+							name='super'
+							error={this.state.errors.super}
+							value={this.state.super}
+							handleChange={this.change}
+							placeholder='Select One'
+						/>
+						<Select
+							title='Program:'
+							name='program'
+							error={this.state.errors.program}
+							options={['Administration', 'IT & Web', 'LTAP', 'Aviation', 'Bike / Ped', 'Econ / Policy', 'Highway Systems', 'Modeling / Comp', 'Port / Ferry', 'School Planning / Transpo', 'Transit', 'TIMS', 'Graphic Design', 'Other']}
+							value={this.state.program}
+							handleChange={this.change}
+							placeholder='Select One'
+						/>
+					<button type="submit" className="primary" value="Submit">Register</button>
+					<button onClick={this.cancel}>Cancel</button>
+		      </form>
+				</div>
 			</div>
     );
   }

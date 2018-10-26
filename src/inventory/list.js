@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom'
 import axios from 'axios'
 
 import Item from './sub/item'
-import Select from '../form/select.js'
+import Checkbox from '../form/checkbox.js'
 
 const jwt = require('jsonwebtoken')
 
@@ -16,6 +16,7 @@ class InventoryList extends Component {
 			kind: '',
 			owner: '',
 			available: '',
+			filters: ['Computer', 'Cord', 'Accessory'],
 			user: jwt.decode(localStorage.getItem('access token'))
 		}
 		this.checkOut = this.checkOut.bind(this)
@@ -53,21 +54,29 @@ class InventoryList extends Component {
 		const value = event.target.value
     const name = event.target.name
 		console.log(value)
-    this.setState({
-			[name]: value
-		})
+		if (event.target.type === 'checkbox') {
+			let changed = [...this.state[name]]
+			event.target.checked ? changed.push(value) : changed.splice(changed.indexOf(value), 1)
+			this.setState({
+				[name]: changed
+			})
+		} else {
+	    this.setState({
+				[name]: value
+			})
+		}
 	}
 
 	filters() {
 		return (
 			<div>
-				<Select
+				<Checkbox
 					title='Kind'
 					name='kind'
 					options={['Computer', 'Cord', 'Accessory']}
-					value={this.state.kind}
+					selectedOptions={this.state.filters}
 					handleChange={this.change}
-					placeholder='Select One'
+					buttons={true}
 				/>
 			</div>
 		)

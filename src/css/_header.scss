@@ -1,0 +1,36 @@
+header {
+  background-color: #526179;
+}
+
+nav {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+}
+
+nav a {
+  align-self: center;
+  border: solid 5px #526179;
+  color: white;
+  display: block;
+  flex: 1;
+  padding: 50px  20px;
+  text-align: center;
+  text-decoration: none;
+}
+
+nav a:hover,
+button:hover {
+  background-color: white;
+  color: #A9671B;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.logo {
+  box-sizing: border-box;
+  margin: 10px auto;
+  min-height: 100px;
+  padding: 0;
+  width: 100px;
+}
