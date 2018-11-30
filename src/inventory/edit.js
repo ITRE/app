@@ -19,25 +19,48 @@ class EditInventory extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			itreID: this.props.location.state.inv.itreID ? this.props.location.state.inv.itreID : '',
-			serial: this.props.location.state.inv.serial ? this.props.location.state.inv.serial : '',
-			bought: this.props.location.state.inv.bought ? moment(this.props.location.state.inv.bought).format('YYYY-MM-DD') : '',
-			project: this.props.location.state.inv.project ? this.props.location.state.inv.project : '',
-			program: this.props.location.state.inv.program ? this.props.location.state.inv.program : '5ba10e8bab1a991b9b327ab3',
-			user: this.props.location.state.inv.user._id ? this.props.location.state.inv.user._id : '5ba2a0450a161d02ca25b959',
-			kind: this.props.location.state.inv.kind ? this.props.location.state.inv.kind : '',
-			location: this.props.location.state.inv.location ? this.props.location.state.inv.location : '',
+			itreID: '',
+			serial: '',
+			bought: '',
+			project: '',
+			program: '5ba10e8bab1a991b9b327ab3',
+			user: '5ba2a0450a161d02ca25b959',
+			kind: '',
+			location: '',
 			log: {
 				type: 'EditInventory',
 				staff: jwt.decode(localStorage.getItem('access token')).first+' '+jwt.decode(localStorage.getItem('access token')).last,
 				note: ''
 			},
-			item: {...this.props.location.state.inv.item},
+			item: {},
 			finished: false
 		}
     this.submit = this.submit.bind(this)
     this.setInfo = this.setInfo.bind(this)
     this.change = this.change.bind(this)
+		this.cancel = this.cancel.bind(this)
+	}
+
+	cancel() {
+		this.setState({
+			finished: <Redirect to={{pathname: '/'}}/>
+		})
+	}
+
+	componentDidMount() {
+		if (this.props.location.state.inv) {
+			this.setState({
+				itreID: this.props.location.state.inv.itreID ? this.props.location.state.inv.itreID : '',
+				serial: this.props.location.state.inv.serial ? this.props.location.state.inv.serial : '',
+				bought: this.props.location.state.inv.bought ? moment(this.props.location.state.inv.bought).format('YYYY-MM-DD') : '',
+				project: this.props.location.state.inv.project ? this.props.location.state.inv.project : '',
+				program: this.props.location.state.inv.program ? this.props.location.state.inv.program : '5ba10e8bab1a991b9b327ab3',
+				user: this.props.location.state.inv.user._id ? this.props.location.state.inv.user._id : '5ba2a0450a161d02ca25b959',
+				kind: this.props.location.state.inv.kind ? this.props.location.state.inv.kind : '',
+				location: this.props.location.state.inv.location ? this.props.location.state.inv.location : '',
+				item: this.props.location.state.inv.item ? {...this.props.location.state.inv.item} : {}
+			})
+		}
 	}
 
 	change(event) {
@@ -167,7 +190,8 @@ class EditInventory extends Component {
 					/>
 				{kind}
 				<br />
-				<input type="submit" value="Submit" />
+				<button type="submit" className="primary" value="Submit">Save</button>
+				<button type="button" onClick={this.cancel}>Cancel</button>
 				</form>
 			</div>
     )

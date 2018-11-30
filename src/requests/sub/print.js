@@ -9,12 +9,23 @@ class Print extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			path: this.props.info.path ? this.props.info.path : '',
-			size: this.props.info.size ? this.props.info.size : '',
-			special: this.props.info.special ? this.props.info.special : '',
-			need: this.props.info.need ? moment(this.props.info.need).format('YYYY-MM-DD') : ''
+			path: '',
+			size: '',
+			special: '',
+			need: ''
 		}
     this.change = this.change.bind(this)
+	}
+
+	componentDidMount() {
+		if (this.props.info) {
+			this.setState({
+				path: this.props.info.path ? this.props.info.path : '',
+				size: this.props.info.size ? this.props.info.size : '',
+				special: this.props.info.special ? this.props.info.special : '',
+				need: this.props.info.need ? moment(this.props.info.need).format('YYYY-MM-DD') : ''
+			})
+		}
 	}
 
 	change(event) {
@@ -41,7 +52,8 @@ class Print extends Component {
 
   render() {
     return (
-			<div>
+			<section className="field-group">
+				<h2>Print</h2>
 				<Input
 					title='What is the full file path of the file to be printed?'
 					name='path'
@@ -71,7 +83,7 @@ class Print extends Component {
 					value={this.state.need}
 					handleChange={this.change}
 				/>
-			</div>
+			</section>
     )
   }
 }

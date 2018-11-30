@@ -10,12 +10,23 @@ class Access extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			type: this.props.info.type ? this.props.info.type : '',
-			location: this.props.info.location ? this.props.info.location : '',
-			desc: this.props.info.desc ? this.props.info.desc : '',
-			start: this.props.info.start ? moment(this.props.info.start).format('YYYY-MM-DD') : ''
+			type: 'Folder / Server',
+			location: '',
+			desc: '',
+			start: ''
 		}
     this.change = this.change.bind(this)
+	}
+
+	componentDidMount() {
+		if (this.props.info) {
+			this.setState({
+				type: this.props.info.type ? this.props.info.type : 'Folder / Server',
+				location: this.props.info.location ? this.props.info.location : '',
+				desc: this.props.info.desc ? this.props.info.desc : '',
+				start: this.props.info.start ? moment(this.props.info.start).format('YYYY-MM-DD') : ''
+			})
+		}
 	}
 
 	change(event) {
@@ -42,7 +53,8 @@ class Access extends Component {
 
   render() {
     return (
-			<div>
+			<section className="field-group">
+				<h2>Access</h2>
 				<Select
 					title='What kind of access do you need?'
 					name='type'
@@ -74,7 +86,7 @@ class Access extends Component {
 					value={this.state.desc}
 					handleChange={this.change}
 				/>
-			</div>
+		</section>
     )
   }
 }

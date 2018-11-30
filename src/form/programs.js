@@ -24,7 +24,7 @@ class ProgramSelect extends Component {
   render() {
 		let value = this.props.value ? this.props.value : '5ba10e8bab1a991b9b327ab3'
     return(
-      <div className="form-group">
+      <div className="select">
 				<label htmlFor={this.props.name} style={this.props.error ? {color:'red'} : {}} className="form-label">
 	        {this.props.title}
 	        {this.props.message && <span style={{fontSize: '12px'}}><br />{this.props.message}</span>}

@@ -53,7 +53,6 @@ class InventoryList extends Component {
 	change(event) {
 		const value = event.target.value
     const name = event.target.name
-		console.log(value)
 		if (event.target.type === 'checkbox') {
 			let changed = [...this.state[name]]
 			event.target.checked ? changed.push(value) : changed.splice(changed.indexOf(value), 1)
@@ -70,14 +69,7 @@ class InventoryList extends Component {
 	filters() {
 		return (
 			<div>
-				<Checkbox
-					title='Kind'
-					name='kind'
-					options={['Computer', 'Cord', 'Accessory']}
-					selectedOptions={this.state.filters}
-					handleChange={this.change}
-					buttons={true}
-				/>
+
 			</div>
 		)
 	}
@@ -152,35 +144,45 @@ class InventoryList extends Component {
 			<div className="main">
 				{ this.state.redirect && this.state.redirect }
 				<h1>Inventory</h1>
-				{ !this.state.redirect &&
-					<div>
-						{this.filters()}
-							<div className="flex">
-				        <p className="column"><strong>ID</strong></p>
-				        <p className="column"><strong>Kind</strong></p>
-				        <p className="column"><strong>Owner</strong></p>
-				        <p className="column"><strong>Room</strong></p>
-				        <p className="column"></p>
-							</div>
-							{ this.state.inventory
-								.sort((a,b) => {
-									const order = { Computer: 1, Cord: 2, Accessory: 3 }
-									return order[a.kind] - order[b.kind]
-								})
-								.map((inv, index) => (
-									<Item
-										type={type}
-										key={inv._id}
-										data={inv}
-										position={index}
-										checkOut={this.checkOut}
-										checkIn={this.checkIn}
-										edit={this.edit}
-										/>
-								))
-							}
+				<section className="field-group">
+					<h2>Filter</h2>
+						<Checkbox
+							title=''
+							name='filters'
+							options={['Computer', 'Cord', 'Accessory']}
+							selectedOptions={this.state.filters}
+							handleChange={this.change}
+							buttons={true}
+						/>
+				</section>
+
+				<div className="field-group">
+					<div className="flex headers">
+		        <p className="column"><strong>ID</strong></p>
+		        <p className="column"><strong>Kind</strong></p>
+		        <p className="column"><strong>Owner</strong></p>
+		        <p className="column"><strong>Room</strong></p>
+		        <p className="column"></p>
 					</div>
-				}
+					{ this.state.inventory
+						.sort((a,b) => {
+							const order = { Computer: 1, Cord: 2, Accessory: 3 }
+							return order[a.kind] - order[b.kind]
+						})
+						.filter(a => this.state.filters.indexOf(a.kind) >= 0)
+						.map((inv, index) => (
+							<Item
+								type={type}
+								key={inv._id}
+								data={inv}
+								position={index}
+								checkOut={this.checkOut}
+								checkIn={this.checkIn}
+								edit={this.edit}
+								/>
+						))
+					}
+				</div>
 			</div>
     );
   }

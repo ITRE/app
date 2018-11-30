@@ -7,16 +7,31 @@ class Cord extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			brand: this.props.item.brand ? this.props.item.brand : '',
-			model: this.props.item.model ? this.props.item.model : '',
-			type: this.props.item.type ? this.props.item.type : '',
-			a: this.props.item.a ? this.props.item.a : '',
-			b: this.props.item.b ? this.props.item.b : '',
-			c: this.props.item.c ? this.props.item.c : '',
-			length: this.props.item.length ? this.props.item.length : '',
-			price: this.props.item.price ? this.props.item.price : ''
+			brand: '',
+			model: '',
+			type: '',
+			a: '',
+			b: '',
+			c: '',
+			length: '',
+			price: ''
 		}
     this.change = this.change.bind(this)
+	}
+
+	componentDidMount() {
+		if (this.props.item) {
+			this.setState({
+				brand: this.props.item.brand ? this.props.item.brand : '',
+				model: this.props.item.model ? this.props.item.model : '',
+				type: this.props.item.type ? this.props.item.type : '',
+				a: this.props.item.a ? this.props.item.a : '',
+				b: this.props.item.b ? this.props.item.b : '',
+				c: this.props.item.c ? this.props.item.c : '',
+				length: this.props.item.length ? this.props.item.length : '',
+				price: this.props.item.price ? this.props.item.price : ''
+			})
+		}
 	}
 
 	change(event) {

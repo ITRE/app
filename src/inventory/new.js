@@ -33,6 +33,13 @@ class NewInventory extends Component {
     this.submit = this.submit.bind(this)
     this.setInfo = this.setInfo.bind(this)
     this.change = this.change.bind(this)
+		this.cancel = this.cancel.bind(this)
+	}
+
+	cancel() {
+		this.setState({
+			finished: <Redirect to={{pathname: '/'}}/>
+		})
 	}
 
   componentDidMount() {
@@ -124,6 +131,7 @@ class NewInventory extends Component {
     return (
 			<div className="main">
 				{this.state.finished && this.state.finished}
+				<h1>New Inventory</h1>
 				<form className='form' onSubmit={this.submit}>
 					<Programs
 						title='Owner'
@@ -188,7 +196,8 @@ class NewInventory extends Component {
 					/>
 					{kind}
 					<br />
-					<input type="submit" value="Submit" />
+					<button type="submit" className="primary" value="Submit">Create</button>
+					<button type="button" onClick={this.cancel}>Cancel</button>
 				</form>
 			</div>
     )

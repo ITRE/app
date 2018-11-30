@@ -3,7 +3,7 @@ import React from 'react'
 const Select = (props) => {
   if (props.options.length < 6) {
     return(
-      <div>
+      <div className="select">
         <label htmlFor={props.name} style={props.error ? {color:'red'} : {}} className="form-label">
           {props.title}
           {props.message && <span style={{fontSize: '12px'}}><br />{props.message}</span>}
@@ -12,7 +12,14 @@ const Select = (props) => {
           {props.options.map(option => {
             return (
               <div className="selectButtons" key={option}>
-                <input className="selectInput" type='radio' value={option} name={props.name} defaultChecked={props.value===option} id={option}/>
+                <input
+                  className="selectInput"
+                  type='radio'
+                  value={option}
+                  onChange={props.handleChange}
+                  name={props.name}
+                  defaultChecked={props.value===option}
+                  id={option}/>
                 <label className="selectLabel" htmlFor={option}>{option}</label>
               </div>
             );

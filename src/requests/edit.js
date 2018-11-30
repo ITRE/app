@@ -19,14 +19,14 @@ class EditTicket extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			for: this.props.location.state.ticket.for,
-			user: {...this.props.location.state.ticket.user},
-			kind: this.props.location.state.ticket.kind,
-			priority: this.props.location.state.ticket.priority,
-			status: this.props.location.state.ticket.status,
-			log: [...this.props.location.state.ticket.log],
+			for: '',
+			user: {},
+			kind: '',
+			priority: '',
+			status: '',
+			log: [],
 			note: '',
-			info: {...this.props.location.state.ticket.info},
+			info: {},
 			redirect: false,
 			addUser: false
 		}
@@ -37,6 +37,20 @@ class EditTicket extends Component {
     this.cancel = this.cancel.bind(this)
 	}
 
+	componentDidMount() {
+		if (this.props.location.state.ticket) {
+			this.setState({
+				for: this.props.location.state.ticket.for ? this.props.location.state.ticket.for : '',
+				user: this.props.location.state.ticket.user ? {...this.props.location.state.ticket.user} : {},
+				kind: this.props.location.state.ticket.kind ? this.props.location.state.ticket.kind : '',
+				priority: this.props.location.state.ticket.priority ? this.props.location.state.ticket.priority : '',
+				status: this.props.location.state.ticket.status ? this.props.location.state.ticket.status : '',
+				log: this.props.location.state.ticket.log ? [...this.props.location.state.ticket.log] : [],
+				info: this.props.location.state.ticket.info ? {...this.props.location.state.ticket.info} : {},
+			})
+		}
+	}
+
 	change(event) {
 		const value = event.target.value
     const name = event.target.name
@@ -44,6 +58,7 @@ class EditTicket extends Component {
 			[name]: value
 		})
 	}
+
 
 	setInfo(info) {
 		this.setState({
@@ -58,13 +73,14 @@ class EditTicket extends Component {
 			kind: this.state.kind,
 			priority: this.state.priority,
 			status: this.state.status,
-			info: this.state.info
+			info: this.state.info._id
 		}
 		if (this.state.kind === 'New User') {
 			newTicket.kind = 'NewUser'
 		}
 		axios.put(`http://api.ems.test/tickets/${this.props.location.state.ticket._id}`, {
 			ticket: newTicket,
+			info: this.state.info,
 			log: {
 				type: 'Edit',
 			  staff: jwt.decode(localStorage.getItem('access token')).first+' '+jwt.decode(localStorage.getItem('access token')).last,
@@ -154,9 +170,10 @@ class EditTicket extends Component {
 						handleChange={this.change}
 						placeholder='Notes'
 					/>
-				{this.state.kind !== 'New User' && <button type="submit" value="Submit">Submit</button> }
-					{this.state.kind === 'New User' && <button onClick={this.newUser} value="Create User">Create User</button> }
-					<button onClick={this.cancel} value="Cancel">Cancel</button>
+					{this.state.kind !== 'New User' && <button className="primary" type="submit" value="Submit">Submit</button> }
+					{this.state.kind === 'New User' && <button className="primary" onClick={this.newUser} value="Create User">Create User</button>}
+					{this.state.kind === 'New User' && <button  type="submit" value="Submit">Update</button>}
+					<button type="button" onClick={this.cancel} value="Cancel">Cancel</button>
 					<br />
 					<h2>Edit Request Ticket</h2>
 					<Users
@@ -202,9 +219,10 @@ class EditTicket extends Component {
 					/>
 				{kind}
 				<br />
-				{this.state.kind !== 'New User' && <button type="submit" value="Submit">Submit</button> }
-				{this.state.kind === 'New User' && <button onClick={this.newUser} value="Create User">Create User</button>}
-				<button onClick={this.cancel} value="Cancel">Cancel</button>
+				{this.state.kind !== 'New User' && <button className="primary" type="submit" value="Submit">Submit</button> }
+				{this.state.kind === 'New User' && <button className="primary" onClick={this.newUser} value="Create User">Create User</button>}
+				{this.state.kind === 'New User' && <button  type="submit" value="Submit">Update</button>}
+				<button type="button" onClick={this.cancel} value="Cancel">Cancel</button>
 				</form>
 			</div>
     )

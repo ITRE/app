@@ -1,12 +1,10 @@
 .low-select {
   display: flex;
   margin: auto;
+  width: 100%;
 
   .selectInput {
-    visibility: hidden;
-    padding: 0;
-    margin: 0;
-    width: 0;
+    display: none;
 
     &:checked + .selectLabel {
       background: $blue;
@@ -52,11 +50,11 @@
 .select {
   display: flex;
   flex-flow: column;
-  margin: 15px auto 20px;
+  margin: 15px auto;
 }
 
 .selectBox {
-  background: url(../arrow.png) no-repeat 100% 0;
+  background: url(./arrow.png) no-repeat 100% 0;
   border: 1px solid $blue;
   border-radius: 0;
   box-sizing: border-box;

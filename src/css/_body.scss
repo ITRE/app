@@ -19,12 +19,22 @@ body {
   width: 100%;
 }
 
+.hide {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px; width: 1px;
+  margin: -1px; padding: 0; border: 0;
+}
+
 h1 {
   color: $test;
   font-size: 2.369em;
 }
 
 h2 {
+  border-bottom: 2px solid $blue;
+  color: $blue;
   font-size: 1.777em;
   font-weight: bold;
 }
@@ -49,33 +59,24 @@ h4 {
 p,
 a,
 button,
-input {
+input,
+textarea {
   font-size: 1em;
   font-weight: normal;
 }
 
 a {
   color: $orange;
+  cursor: pointer;
   font-weight: bold;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .subscript {
   font-size: .75em;
-}
-
-button {
-  background-color: $orange;
-  border: solid 2px $orange;
-  border-radius: 5px;
-  box-sizing: border-box;
-  color: white;
-  padding: 8px 10px;
-  margin: 5px;
-
-  &.primary {
-    background-color: $blue;
-    border: solid 2px $blue;
-  }
 }
 
 .screen-reader {
@@ -100,30 +101,34 @@ button {
   width: 100%;
 }
 
-.main-column {
-  box-sizing: border-box;
-  width: 63%;
-}
-
-.side-column {
-  box-sizing: border-box;
-  width: 35%;
-}
-
 .full-column {
   box-sizing: border-box;
   width: 100%;
 }
 
 .column {
+  box-sizing: border-box;
+  margin: 5px 0;
   min-width: 150px;
 }
 
-.line-item {
-  align-items: center;
-  border-bottom: 3px solid #A9671B;
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  text-align: left;
+.blue {
+  color: $blue;
+}
+
+@media(min-width: 750px) {
+  .main {
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  .main-column {
+    box-sizing: border-box;
+    width: 60%;
+  }
+
+  .side-column {
+    box-sizing: border-box;
+    width: 37%;
+  }
 }

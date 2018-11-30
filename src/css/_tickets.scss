@@ -1,0 +1,73 @@
+.line-item {
+  align-items: center;
+  border-bottom: 3px solid $orange;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  text-align: left;
+}
+
+.request-item {
+  border: 1px solid $grey;
+  cursor: pointer;
+  margin-bottom: 20px;
+  padding: 10px;
+
+  &:hover {
+    border: 1px solid $blue;
+  }
+}
+
+.admin {
+  border-bottom: 1px solid $blue;
+  display: flex;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+
+  .status {
+    background-color: $blue;
+    border: solid 2px $blue;
+    box-sizing: border-box;
+    color: $white;
+    padding: 10px;
+    text-align: center;
+    transform: rotate(180deg);
+    width: 45px;
+    margin-right: 10px;
+    writing-mode: vertical-rl;
+
+    &.New {
+      background-color: $white;
+      color: $blue;
+    }
+
+    &.High,
+    &.Urgent {
+      background-color: $orange;
+      border: solid 2px $orange;
+      color: $white;
+    }
+
+    &.Completed,
+    &.Closed {
+      background-color: $white;
+      border: solid 2px $orange;
+      color: $orange;
+    }
+
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+}
+
+.request-info {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+
+  p {
+    margin: 5px 0 10px;
+  }
+}

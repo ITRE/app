@@ -7,12 +7,14 @@ import Input from '../form/input.js'
 import Users from '../form/users.js'
 import Select from '../form/select.js'
 
-class Register extends Component {
+const jwt = require('jsonwebtoken')
+
+class EditUser extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			username: '',
-		  password: '',
+			password: '',
+		  confirm: '',
 		  role: 'Staff',
 		  email:'',
 		  phone: '',
@@ -21,10 +23,9 @@ class Register extends Component {
 		  program: '',
 		  super: '',
 		  room: '',
+			user: jwt.decode(localStorage.getItem('access token')),
 			errors: {
-				username: '',
-			  password: '',
-			  role: '',
+				confirm: '',
 			  email: '',
 			  phone: '',
 			  first: '',
@@ -51,11 +52,15 @@ class Register extends Component {
 			} else if (errors[key]==='' && !this.state[key]) {
 				success = false
 				errors[key] = true
-		    this.setState({
-					errors: errors
-				})
 			}
 		}
+		if (this.state.password !== this.state.confirm) {
+			success = false
+			errors.confirm = true
+		}
+		this.setState({
+			errors: errors
+		})
 		return success
 	}
 
@@ -66,30 +71,16 @@ class Register extends Component {
 	}
 
   componentDidMount() {
-		if (this.props.type==='Admin') {
-			const errors = {...this.state.errors}
-			for (const key in errors) {
-				if (this.state[key] === '') {
-					errors[key] = true
-			    this.setState({
-						errors: errors
-					})
-				}
-			}
-		} else {
-			this.setState({
-				username: this.props.username ? this.props.username : '',
-			  password: this.props.password ? this.props.password : '',
-			  role: this.props.role ? this.props.role : 'Staff',
-			  email: this.props.email ? this.props.email : '',
-			  phone: this.props.phone ? this.props.phone : '',
-			  first: this.props.first ? this.props.first : '',
-			  last: this.props.last ? this.props.last : '',
-			  program: this.props.program ? this.props.program : '',
-			  super: this.props.super ? this.props.super : '',
-			  room: this.props.room ? this.props.room : ''
-			})
-		}
+		this.setState({
+		  role: this.props.role ? this.props.role : 'Staff',
+		  email: this.props.email ? this.props.email : '',
+		  phone: this.props.phone ? this.props.phone : '',
+		  first: this.props.first ? this.props.first : '',
+		  last: this.props.last ? this.props.last : '',
+		  program: this.props.program ? this.props.program : '',
+		  super: this.props.super ? this.props.super : '',
+		  room: this.props.room ? this.props.room : ''
+		})
 	}
 
 	change(event) {
@@ -100,6 +91,13 @@ class Register extends Component {
 			switch(event.target.type) {
 				case 'password':
 					if (!value || value.length < 8) {
+						errors[name] = true
+					} else {
+						errors[name] = false
+					}
+					break
+				case 'confirm':
+					if (!value || value !== this.state.password) {
 						errors[name] = true
 					} else {
 						errors[name] = false
@@ -125,64 +123,7 @@ class Register extends Component {
 		if (!validated) {
 			alert('Not all fields were filled correctly. Please double check your information and try again.')
 		} else {
-			const user = {
-				username: this.state.username,
-			  password: this.state.password,
-			  role: this.state.role,
-			  email: this.state.email,
-			  phone: this.state.phone,
-			  first: this.state.first,
-			  last: this.state.last,
-			  program: this.state.program,
-			  super: this.state.super,
-			  room: this.state.room,
-			}
-			if (this.props.type === 'Admin') {
-				const info = {
-					role: this.state.role,
-					first: this.state.first,
-					last: this.state.last,
-					email: this.state.email,
-					phone: this.state.phone,
-					program: this.state.program,
-					super: this.state.super,
-					room: this.state.room,
-					start: this.props.start,
-					access: this.props.access,
-					software: this.props.software,
-					hardware: this.props.hardware,
-					account: this.props.account,
-					other: this.props.other,
-				}
-				this.setState({
-					registered: <Redirect to={{
-						pathname: '/admin/equipment',
-						state: {
-							ticket: this.props.ticket,
-							user: user,
-							info: info
-						}
-					}} />
-				})
-			} else {
-				axios(`http://api.ems.test/user`, {
-					method: "post",
-					data: user,
-					withCredentials: 'include'
-				})
-		    .then(res => {
-						this.setState({
-							registered: <Redirect to={{pathname: '/dashboard'}}/>
-						})
-		    })
-				.catch(error => {
-					Swal({
-					  title: error.response.status+' Error',
-					  type: 'error',
-					  text:error.response.data.msg,
-					})
-			  })
-			}
+
 		}
 	}
 
@@ -197,16 +138,7 @@ class Register extends Component {
 					<section className="field-group">
 						<h2>Account</h2>
 						<Input
-							title='Username'
-							name='username'
-							type='text'
-							error={this.state.errors.username}
-							value={this.state.username}
-							handleChange={this.change}
-							placeholder='Username'
-						/>
-						<Input
-							title='Password'
+							title='New Password'
 							name='password'
 							type='password'
 							error={this.state.errors.password}
@@ -214,8 +146,20 @@ class Register extends Component {
 							message='Must be at least 8 characters'
 							value={this.state.password}
 							handleChange={this.change}
-							placeholder='Password'
+							placeholder='New Password'
 						/>
+						<Input
+							title='Confirm Password'
+							name='confirm'
+							type='password'
+							error={this.state.errors.confirm}
+							criteria='password'
+							message=''
+							value={this.state.confirm}
+							handleChange={this.change}
+							placeholder='Confirm Password'
+						/>
+					{this.state.user.role === 'admin' &&
 						<Select
 							title='Role:'
 							name='role'
@@ -226,6 +170,7 @@ class Register extends Component {
 							handleChange={this.change}
 							placeholder='Select One'
 						/>
+					}
 					</section>
 
 					<section className="field-group">
@@ -306,4 +251,4 @@ class Register extends Component {
   }
 }
 
-export default Register
+export default EditUser

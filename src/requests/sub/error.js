@@ -10,12 +10,23 @@ class Error extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			type: this.props.info.type ? this.props.info.type : '',
-			desc: this.props.info.desc ? this.props.info.desc : '',
-			start: this.props.info.start ? moment(this.props.info.start).format('YYYY-MM-DD') : '',
-			tried: this.props.info.tried ? this.props.info.tried : []
+			kind: '',
+			desc: '',
+			start: '',
+			tried: []
 		}
     this.change = this.change.bind(this)
+	}
+
+	componentDidMount() {
+		if (this.props.info) {
+			this.setState({
+				kind: this.props.info.kind ? this.props.info.kind : '',
+				desc: this.props.info.desc ? this.props.info.desc : '',
+				start: this.props.info.start ? moment(this.props.info.start).format('YYYY-MM-DD') : '',
+				tried: this.props.info.tried ? this.props.info.tried : []
+			})
+		}
 	}
 
 	change(event) {
@@ -42,13 +53,14 @@ class Error extends Component {
 
   render() {
     return (
-			<div>
+			<section className="field-group">
+				<h2>Error</h2>
 				<Select
 					title='What kind of issue are you having?'
-					name='type'
+					name='kind'
 					type='text'
 					options={['Start Up / Boot', 'Monitor / Display', 'Microsoft Office', 'Email / Internet', 'Remote Desktop', 'Phone', 'Laptop / Mobile', 'Other']}
-					value={this.state.type}
+					value={this.state.kind}
 					handleChange={this.change}
 					placeholder='Select One'
 				/>
@@ -73,7 +85,7 @@ class Error extends Component {
 					handleChange={this.change}
 					placeholder='Name'
 				/>
-			</div>
+		</section>
     )
   }
 }

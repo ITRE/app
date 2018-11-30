@@ -10,13 +10,25 @@ class Equipment extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			budget: this.props.info.budget ? this.props.info.budget : '',
-			account: this.props.info.account ? this.props.info.account : '',
-			need: this.props.info.need ? moment(this.props.info.need).format('YYYY-MM-DD') : '',
-			type: this.props.info.type ? this.props.info.type : '',
-			desc: this.props.info.desc ? this.props.info.desc : ''
+			budget: '',
+			account: '',
+			need: '',
+			type: '',
+			desc: ''
 		}
     this.change = this.change.bind(this)
+	}
+
+	componentDidMount() {
+		if (this.props.info) {
+			this.setState({
+				budget: this.props.info.budget ? this.props.info.budget : '',
+				account: this.props.info.account ? this.props.info.account : '',
+				need: this.props.info.need ? moment(this.props.info.need).format('YYYY-MM-DD') : '',
+				type: this.props.info.type ? this.props.info.type : '',
+				desc: this.props.info.desc ? this.props.info.desc : ''
+			})
+		}
 	}
 
 	change(event) {
@@ -43,7 +55,8 @@ class Equipment extends Component {
 
   render() {
     return (
-			<div>
+			<section className="field-group">
+				<h2>Equipment</h2>
 				<Input
 					title='What is your budget?'
 					name='budget'
@@ -82,7 +95,7 @@ class Equipment extends Component {
 					value={this.state.desc}
 					handleChange={this.change}
 				/>
-			</div>
+		</section>
     )
   }
 }

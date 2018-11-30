@@ -6,21 +6,65 @@
   }
 
   h1,
-  h2 {
+  h2,
+  .headers {
     border-bottom: 1px solid $grey;
     color: $darkGrey;
   }
 }
 
 label {
-  margin: 5px 0;
+  color: $orange;
+  display: block;
+  margin: 5px 0 10px;
+}
+
+button {
+  background-color: $orange;
+  border: solid 2px $orange;
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: white;
+  padding: 8px 10px;
+  margin: 5px;
+
+  &.link {
+    background-color: transparent;
+    border: none;
+    color: $orange;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+  }
+
+  &.primary {
+    background-color: $blue;
+    border: solid 2px $blue;
+
+    &:hover {
+      background-color: $white;
+      color: $blue;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+
+  &:disabled {
+    background-color: $white;
+    color: $orange;
+    cursor: not-allowed;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 .form-group {
   border-radius: 0;
   box-sizing: border-box;
 	display: block;
-  margin: 15px auto 20px;
+  margin: 20px auto;
 	padding: 0;
 	position: relative;
 	transition: border-color .3s;
@@ -40,7 +84,6 @@ label {
   label {
     background-color: $white;
     box-sizing: border-box;
-    color: $orange;
     font-family: Muli;
     left: 10px;
     margin: 0;
@@ -53,7 +96,8 @@ label {
     transition-property: color, transform;
   }
 
-  input {
+  input,
+  textarea {
     background-color: transparent;
 		border: 1px solid $blue;
     border-radius: 0;
@@ -91,4 +135,8 @@ form {
 	position: relative;
 	transition: border-color .3s;
   width: 100%;
+}
+
+.textarea label {
+  margin-bottom: 10px;
 }

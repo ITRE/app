@@ -19,14 +19,13 @@ class Tickets extends Component {
 	}
 
 	componentDidMount() {
-		const url = (this.state.user.role === 'Admin' ? 'tickets' : 'me/tickets')
+//		const url = (this.state.user.role === 'Admin' ? 'tickets' : 'me/tickets')
     axios.get('http://api.ems.test/tickets', {
 			method: "get",
 			headers: {token: 'JWT '+localStorage.getItem('access token')},
 			withCredentials: 'include'
 		})
     .then(res => {
-			console.log(res.data.data)
 			switch(this.state.user.role) {
 				case 'Admin':
 					this.setState({
@@ -148,6 +147,10 @@ class Tickets extends Component {
 				{ this.state.redirect && this.state.redirect }
 				{ this.state.tickets.length > 0 &&
 					this.state.tickets
+					.sort((a,b) => {
+						const order = { 'Awaiting Reply': 1, 'New': 2, 'Seen': 2, 'In Progress': 2, 'On Hold': 2, 'Reopened': 2, 'Completed': 3, 'Closed': 4 }
+						return order[a.status] - order[b.status] || a.added - b.added
+					})
 					.map( (ticket, index) => {
 						return (
 							<Request

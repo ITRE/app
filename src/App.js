@@ -1,21 +1,22 @@
-import React, { Component } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import React, { Component } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import Home from './home'
-import Login from './user/login'
-import Recover from './user/recover'
-import Register from './user/register'
+import Landing from './landing'
+//import Recover from './recover'
+//import Register from './register'
+import './App.scss';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
+      <BrowserRouter className="App">
         <Switch>
-          <Route path="/register" component={Register}/>
-          <Route path="/recover" component={Recover}/>
-          <Route path="/login" component={Login}/>
+          <Route path="/login" component={Landing}/>
+          <Route path="/recover" component={Landing}/>
+          <Route path="/register" component={Landing}/>
           <Route path="/" component={Home} />
         </Switch>
-      </div>
+      </BrowserRouter>
     )
   }
 }

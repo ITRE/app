@@ -7,15 +7,29 @@ class Computer extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			brand: this.props.item.brand ? this.props.item.brand : '',
-			model: this.props.item.model ? this.props.item.model : '',
-			type: this.props.item.type ? this.props.item.type : '',
-			hd: this.props.item.hd ? this.props.item.hd : '',
-			ram: this.props.item.ram ? this.props.item.ram : '',
-			cpu: this.props.item.cpu ? this.props.item.cpu : '',
-			price: this.props.item.price ? this.props.item.price : ''
+			brand: '',
+			model: '',
+			type: '',
+			hd: '',
+			ram: '',
+			cpu: '',
+			price: ''
 		}
     this.change = this.change.bind(this)
+	}
+
+	componentDidMount() {
+		if (this.props.item) {
+			this.setState({
+				brand: this.props.item.brand ? this.props.item.brand : '',
+				model: this.props.item.model ? this.props.item.model : '',
+				type: this.props.item.type ? this.props.item.type : '',
+				hd: this.props.item.hd ? this.props.item.hd : '',
+				ram: this.props.item.ram ? this.props.item.ram : '',
+				cpu: this.props.item.cpu ? this.props.item.cpu : '',
+				price: this.props.item.price ? this.props.item.price : ''
+			})
+		}
 	}
 
 	change(event) {

@@ -25,6 +25,13 @@ class NewTicket extends Component {
     this.submit = this.submit.bind(this)
     this.setInfo = this.setInfo.bind(this)
     this.change = this.change.bind(this)
+		this.cancel = this.cancel.bind(this)
+	}
+
+	cancel() {
+		this.setState({
+			redirect: <Redirect to={{pathname: '/'}}/>
+		})
 	}
 
 	change(event) {
@@ -93,28 +100,33 @@ class NewTicket extends Component {
 
     return (
 			<div className='requests main'>
+				<h1>New Request</h1>
 				{ this.state.redirect && this.state.redirect }
 				<form className='form' onSubmit={this.submit}>
-					<Users
-						title='Who is this request for?'
-						name='for'
-						value={this.state.for}
-						string={true}
-						extraOptions={['My Department']}
-						handleChange={this.change}
-						placeholder='Select One'
-					/>
-					<Select
-						title='What kind of request is this?'
-						name='kind'
-						options={['Access', 'Equipment', 'Error', 'Print', 'New User', 'Other']}
-						value={this.state.kind}
-						handleChange={this.change}
-						placeholder='Select One'
-					/>
+					<section className="field-group">
+						<h2>Requestor</h2>
+						<Users
+							title='Who is this request for?'
+							name='for'
+							value={this.state.for}
+							string={true}
+							extraOptions={['My Department']}
+							handleChange={this.change}
+							placeholder='Select One'
+						/>
+						<Select
+							title='What kind of request is this?'
+							name='kind'
+							options={['Access', 'Equipment', 'Error', 'Print', 'New User', 'Other']}
+							value={this.state.kind}
+							handleChange={this.change}
+							placeholder='Select One'
+						/>
+				</section>
 				{kind}
-				<br />
-				<input type="submit" value="Submit" />
+
+				<button type="submit" className="primary" value="Submit">Submit</button>
+				<button type="button" onClick={this.cancel}>Cancel</button>
 				</form>
 			</div>
     )

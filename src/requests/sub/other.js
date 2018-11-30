@@ -8,10 +8,19 @@ class Other extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			desc: this.props.info.desc ? this.props.info.desc : '',
-			need: this.props.info.need ? moment(this.props.info.need).format('YYYY-MM-DD') : ''
+			desc: '',
+			need: ''
 		}
     this.change = this.change.bind(this)
+	}
+
+	componentDidMount() {
+		if (this.props.info) {
+			this.setState({
+				desc: this.props.info.desc ? this.props.info.desc : '',
+				need: this.props.info.need ? moment(this.props.info.need).format('YYYY-MM-DD') : ''
+			})
+		}
 	}
 
 	change(event) {
@@ -38,7 +47,8 @@ class Other extends Component {
 
   render() {
     return (
-			<div>
+			<section className="field-group">
+				<h2>Other</h2>
 				<Textarea
 					title='Additional Description'
 					name='desc'
@@ -54,7 +64,7 @@ class Other extends Component {
 					value={this.state.need}
 					handleChange={this.change}
 				/>
-			</div>
+			</section>
     )
   }
 }

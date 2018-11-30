@@ -7,14 +7,27 @@ class Accessory extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			brand: this.props.item.brand ? this.props.item.brand : '',
-			model: this.props.item.model ? this.props.item.model : '',
-			type: this.props.item.type ? this.props.item.type : '',
-			power: this.props.item.hd ? this.props.item.hd : '',
-			size: this.props.item.ram ? this.props.item.ram : '',
-			price: this.props.item.price ? this.props.item.price : ''
+			brand: '',
+			model: '',
+			type: '',
+			power: '',
+			size: '',
+			price: ''
 		}
     this.change = this.change.bind(this)
+	}
+
+	componentDidMount() {
+		if (this.props.item) {
+			this.setState({
+				brand: this.props.item.brand ? this.props.item.brand : '',
+				model: this.props.item.model ? this.props.item.model : '',
+				type: this.props.item.type ? this.props.item.type : '',
+				power: this.props.item.hd ? this.props.item.hd : '',
+				size: this.props.item.ram ? this.props.item.ram : '',
+				price: this.props.item.price ? this.props.item.price : ''
+			})
+		}
 	}
 
 	change(event) {
@@ -30,7 +43,8 @@ class Accessory extends Component {
 
   render() {
     return (
-			<div>
+			<section className="field-group">
+				<h2>Accessory</h2>
 				<Input
 					title='Brand'
 					name='brand'
@@ -79,7 +93,7 @@ class Accessory extends Component {
 					handleChange={this.change}
 					placeholder='Price'
 				/>
-			</div>
+			</section>
     )
   }
 }

@@ -45,7 +45,6 @@ class AdminNewEquipment extends Component {
 	}
 
 	pushNew(inv) {
-		console.log(inv)
 		let equipment = [...this.state.newEquipment]
 		let list = {...this.state.equipment}
 		list[inv.itreID] = inv.item.brand+' '+inv.item.type
@@ -84,7 +83,6 @@ other: this.props.other
 	}
 
   render() {
-		console.log(this.state)
 		let info = []
 		let value = {}
 		let multiple = {
