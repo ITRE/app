@@ -18,14 +18,45 @@ class NewTicket extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			for: jwt.decode(localStorage.getItem('access token')).first+' '+jwt.decode(localStorage.getItem('access token')).last,
+			requestor_id: jwt.decode(localStorage.getItem('access token')).username,
 			kind: '',
-			info: {}
+			info: {},
+			errors: {
+				requestor_id: '',
+			  kind: '',
+			  info: ''
+			},
+			registered: false,
+			validated: false
 		}
+		this.validate = this.validate.bind(this)
     this.submit = this.submit.bind(this)
     this.setInfo = this.setInfo.bind(this)
     this.change = this.change.bind(this)
 		this.cancel = this.cancel.bind(this)
+	}
+
+	validate() {
+		const errors = {...this.state.errors}
+		let success = true
+		for (const key in errors) {
+			if(errors[key]) {
+				success = false
+			} else if (errors[key]==='' && !this.state[key]) {
+				success = false
+				switch(key) {
+					case 'kind':
+						errors[key] = 'Please make a selection'
+						break;
+					default:
+						errors[key] = 'This field cannot be left blank'
+				}
+		    this.setState({
+					errors: errors
+				})
+			}
+		}
+		return success
 	}
 
 	cancel() {
@@ -49,27 +80,31 @@ class NewTicket extends Component {
 	}
 
   submit(event) {
-		const newTicket = {
-			user: jwt.decode(localStorage.getItem('access token')).id,
-			for: this.state.for,
-			kind: this.state.kind
-		}
-		if (this.state.kind === 'New User') {
-			newTicket.kind = 'NewUser'
-		}
-		axios.post('http://api.ems.test/tickets', {
-			ticket: newTicket,
-			kind: this.state.info
-		})
-    .then(res => {
-			this.setState({
-				redirect: <Redirect to={'/tickets/'} />
+		const validated = this.validate()
+		if (!validated) {
+			alert('Not all fields were filled correctly. Please double check your information and try again.')
+		} else {
+			const newTicket = {
+				user_id: jwt.decode(localStorage.getItem('access token')).username,
+				requestor_id: this.state.requestor_id,
+				kind: this.state.kind
+			}
+			if (this.state.kind === 'New User') {
+				newTicket.kind = 'NewUser'
+			}
+			axios.post('http://api.ems.test/tickets', {
+				ticket: newTicket,
+				kind: this.state.info
 			})
-    })
-    .catch(error => {
-      alert(error)
-    })
-
+	    .then(res => {
+				this.setState({
+					redirect: <Redirect to={'/tickets/'} />
+				})
+	    })
+	    .catch(error => {
+	      alert(error)
+	    })
+		}
 		event.preventDefault()
   }
 
@@ -77,22 +112,22 @@ class NewTicket extends Component {
 		let kind
 		switch(this.state.kind) {
 			case 'Access':
-				kind = <Access test={this.setInfo} />
+				kind = <Access setInfo={this.setInfo} />
 				break
 			case 'Equipment':
-				kind = <Equipment test={this.setInfo} />
+				kind = <Equipment setInfo={this.setInfo} />
 				break
 			case 'Error':
-				kind = <Error test={this.setInfo} />
+				kind = <Error setInfo={this.setInfo} />
 				break
 			case 'Print':
-				kind = <Print test={this.setInfo} />
+				kind = <Print setInfo={this.setInfo} />
 				break
 			case 'New User':
-				kind = <NewUser test={this.setInfo} />
+				kind = <NewUser setInfo={this.setInfo} />
 				break
 			case 'Other':
-				kind = <Other test={this.setInfo} />
+				kind = <Other setInfo={this.setInfo} />
 				break
 			default:
 				kind = ''
@@ -107,9 +142,10 @@ class NewTicket extends Component {
 						<h2>Requestor</h2>
 						<Users
 							title='Who is this request for?'
-							name='for'
-							value={this.state.for}
+							name='requestor_id'
+							value={this.state.requestor_id}
 							string={true}
+							error={this.state.errors.requestor_id}
 							extraOptions={['My Department']}
 							handleChange={this.change}
 							placeholder='Select One'
@@ -117,6 +153,7 @@ class NewTicket extends Component {
 						<Select
 							title='What kind of request is this?'
 							name='kind'
+							error={this.state.errors.kind}
 							options={['Access', 'Equipment', 'Error', 'Print', 'New User', 'Other']}
 							value={this.state.kind}
 							handleChange={this.change}

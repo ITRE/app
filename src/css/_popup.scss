@@ -15,3 +15,60 @@
     margin-left: 20px;
   }
 }
+
+.popup_info {
+  list-style-type: none;
+  margin-left: 20px;
+  text-align: left;
+
+  .subinfo {
+    list-style-type: none;
+    margin-left: 40px;
+  }
+}
+
+.caveat {
+  text-align: left;
+  margin: 15px 0 5px;
+
+  p {
+    font-size: .9em;
+    margin-bottom: 10px;
+  }
+}
+
+.swal2-popup .swal2-styled {
+  &:hover {
+    background-color: $white;
+    background-image: none;
+  }
+  &.swal2-cancel {
+    background-color: $orange;
+    border: solid 2px $orange;
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: white;
+    padding: 10px 20px;
+    margin-right: 15px;
+
+    &:hover {
+      background-color: $white;
+      background-image: none;
+      color: $orange;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+
+  &.swal2-confirm {
+    background-color: $blue;
+    border: solid 2px $blue;
+
+    &:hover {
+      background-color: $white;
+      color: $blue;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+}

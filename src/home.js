@@ -13,6 +13,7 @@ import Dashboard from './user/dashboard'
 import EditUser from './user/edit'
 import ListUsers from './user/list'
 import AdminNewUser from './user/register'
+
 import AdminAddEquipment from './admin/equipment'
 import PurchaseInventory from './admin/purchase'
 
@@ -37,7 +38,7 @@ class Home extends Component {
   componentWillMount() {
 		const tempToken = localStorage.getItem('access token');
 		if (tempToken) {
-			const tempUser = jwt.decode(localStorage.getItem('access token'))
+			const tempUser = jwt.decode(tempToken)
 			if (moment.unix(tempUser.exp).isAfter(Date.now())) {
 				this.setState({
 					token: tempToken,
@@ -49,7 +50,7 @@ class Home extends Component {
 				  type: 'warning',
 				  text:'Your login session has expired. Redirecting you to the login page.',
 				})
-				localStorage.removeItem('access token')
+				this.logout()
 			}
 		}
   }

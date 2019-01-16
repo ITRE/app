@@ -39,14 +39,14 @@ class Error extends Component {
 				tried: newTried
 			}, () => {
 				const info = {...this.state}
-				this.props.test(info)
+				this.props.setInfo(info)
 			})
 		} else {
 	    this.setState({
 				[name]: value
 			}, () => {
 				const info = {...this.state}
-				this.props.test(info)
+				this.props.setInfo(info)
 			})
 		}
 	}
@@ -54,7 +54,7 @@ class Error extends Component {
   render() {
     return (
 			<section className="field-group">
-				<h2>Error</h2>
+				<h2>Error Information</h2>
 				<Select
 					title='What kind of issue are you having?'
 					name='kind'

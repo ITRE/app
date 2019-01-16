@@ -33,28 +33,34 @@ class Request extends Component {
 		let info = ''
 		const dateSub = moment(ticket.added).format('MMMM Do YYYY, h:mm a')
 		for(let item in ticket.info) {
+			const keyLabel = item.replace('_', ' ').split(" ").map(a=>a.substring(0,1).toUpperCase()+a.substring(1)).join(' ')
 			if (item.charAt(0) === '_') {
 				continue;
+			} else if (Array.isArray(ticket.info[item])) {
+				info += '<p><strong>'+keyLabel+':</strong> <ul class="log">'
+				info += ticket.info[item].filter(entry => entry !== ', ').map(entry => '<li>'+entry+'</li>')
+				info = info + '</ul></p>'
+				continue
 			} else if (item === 'super') {
-				info = info + '<p><strong>'+item.charAt(0).toUpperCase() + item.slice(1)+':</strong> '+ticket.info[item].first+' '+ticket.info[item].last+'</p>'
+				info += '<p><strong>'+keyLabel+':</strong> '+ticket.info[item].first+' '+ticket.info[item].last+'</p>'
 				continue
 			} else if (item === 'program') {
-				info = info + '<p><strong>'+item.charAt(0).toUpperCase() + item.slice(1)+':</strong> '+ticket.info[item].name+'</p>'
+				info = info + '<p><strong>'+keyLabel+':</strong> '+ticket.info[item].name+'</p>'
 				continue
 			}
 			if (moment(ticket.info[item], 'YYYY-MM-DDTHH:mm:ss.SSSSZ', true).isValid()) {
-				info = info + '<p><strong>'+item.charAt(0).toUpperCase() + item.slice(1)+':</strong> '+moment(ticket.info[item]).format('MMMM Do YYYY')+'</p>'
+				info += '<p><strong>'+keyLabel+':</strong> '+moment(ticket.info[item]).format('MMMM Do YYYY')+'</p>'
 				continue
 			}
-			info = info + '<p><strong>'+item.charAt(0).toUpperCase() + item.slice(1)+':</strong> '+ticket.info[item]+'</p>'
+			info += '<p><strong>'+keyLabel+':</strong> '+ticket.info[item]+'</p>'
 		}
 		if (this.props.viewer.role === 'Admin' && ticket.log.length > 0) {
-			info = info + '<p><strong>Log:</strong> <ul class="log">'
+			info += '<p><strong>Log:</strong> <ul class="log">'
 			for (let entry in ticket.log) {
 				if (ticket.log[entry] === null) {
 					continue
 				}
-				info = info + '<li><strong>'+moment(ticket.log[entry].date).format('MMMM Do YYYY')+'</strong> | '+ticket.log[entry].type+' - '+ticket.log[entry].staff
+				info += '<li><strong>'+moment(ticket.log[entry].date).format('MMM DD, YYYY h:mm a')+'</strong> | '+ticket.log[entry].type+' - '+ticket.log[entry].staff
 				if (ticket.log[entry].note) {
 					info = info + '<ul><li>'+ticket.log[entry].note+'</li></ul>'
 				}
@@ -68,8 +74,8 @@ class Request extends Component {
 		  type: 'info',
 		  html:`<div class="popup">
 				<p><strong>Date Submitted:</strong> ${dateSub}</p>
-				<p><strong>Submitted By:</strong> ${ticket.user.first} ${ticket.user.last}</p>
-				<p><strong>Submitted For:</strong> ${ticket.for}</p>
+				<p><strong>Submitted By:</strong> ${ticket.requestor.first} ${ticket.requestor.last}</p>
+				<p><strong>Submitted For:</strong> ${ticket.for.first} ${ticket.for.last}</p>
 				<p><strong>Type:</strong> ${ticket.kind}</p>
 				<p><strong>Status:</strong> ${ticket.status}</p>
 				${info}
@@ -78,7 +84,11 @@ class Request extends Component {
 	}
 
 	render(){
-		const {ticket} = this.props;
+		const {ticket} = this.props
+		let kind = ticket.kind
+		if (kind === 'NewUser') {
+			kind = 'New User'
+		}
 		if (this.props.viewer.role === 'Admin') {
 			return(
 				<div className="admin">
@@ -86,13 +96,13 @@ class Request extends Component {
 						{ticket.status} - {ticket.priority}
 					</div>
 					<div className="request-info">
-						<p><strong>Ticket for:</strong> {ticket.for}</p>
+						<p><strong>Ticket for:</strong> {ticket.for.first} {ticket.for.last}</p>
 						{ticket.status !== 'Completed' &&
 							<p><strong>Submitted on:</strong> {moment(ticket.added).format('MMMM Do YYYY, h:mm a')}</p>}
 						{(ticket.status === 'Completed' || ticket.status === 'Closed') &&
 							<p><strong>Closed on:</strong> {moment(ticket.log[ticket.log.length-1].date).format('MMMM Do YYYY, h:mm a')}</p>}
-						<p><strong>Kind: </strong>{ticket.kind}</p>
-						<p><strong>Submitted by: </strong>{ticket.user.first} {ticket.user.last}</p>
+						<p><strong>Kind: </strong>{kind}</p>
+						<p><strong>Submitted by: </strong>{ticket.requestor.first} {ticket.requestor.last}</p>
 						<div className="admin_buttons">
 							{ (ticket.status !== 'Completed' && ticket.status !== 'Closed')
 								&& <button className="primary" onClick={this.edit}>Work On Request</button> }
@@ -106,8 +116,8 @@ class Request extends Component {
 		} else {
 		  return (
 		    <div className="request-item request-info" onClick={this.info}>
-					<p><strong>Ticket for:</strong> {ticket.for}</p>
-					<p><strong>Kind: </strong>{ticket.kind}</p>
+					<p><strong>Ticket for:</strong> {ticket.for.first} {ticket.for.last}</p>
+					<p><strong>Kind: </strong>{kind}</p>
 					<p><strong>Submitted on:</strong> {moment(ticket.added).format('MMMM Do YYYY, h:mm a')}</p>
 					{ticket.status === 'Completed'
 						&& <p>Completed on: {moment(ticket.completed).format('MMMM Do YYYY, h:mm a')}</p>}

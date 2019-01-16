@@ -9,7 +9,7 @@ class Computer extends Component {
 		this.state = {
 			brand: '',
 			model: '',
-			type: '',
+			type: 'Desktop',
 			hd: '',
 			ram: '',
 			cpu: '',
@@ -23,7 +23,7 @@ class Computer extends Component {
 			this.setState({
 				brand: this.props.item.brand ? this.props.item.brand : '',
 				model: this.props.item.model ? this.props.item.model : '',
-				type: this.props.item.type ? this.props.item.type : '',
+				type: this.props.item.type ? this.props.item.type : 'Desktop',
 				hd: this.props.item.hd ? this.props.item.hd : '',
 				ram: this.props.item.ram ? this.props.item.ram : '',
 				cpu: this.props.item.cpu ? this.props.item.cpu : '',
@@ -45,7 +45,8 @@ class Computer extends Component {
 
   render() {
     return (
-			<div>
+		<section className="field-group">
+			<h2>Computer Information</h2>
 				<Input
 					title='Brand'
 					name='brand'
@@ -102,7 +103,7 @@ class Computer extends Component {
 					handleChange={this.change}
 					placeholder='Price'
 				/>
-			</div>
+		</section>
     )
   }
 }

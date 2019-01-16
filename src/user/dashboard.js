@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Redirect } from 'react-router-dom'
-import Item from '../inventory/sub/item'
 import Request from '../requests/sub/request'
+import moment from 'moment'
+
+import Table from '../form/table.js'
 
 const jwt = require('jsonwebtoken')
 
@@ -23,14 +25,14 @@ class Dashboard extends Component {
   }
 
 	checkIn(index) {
-  //  const token = localStorage.getItem('access token'),
 		const data = this.state.inventory[index]
 		axios(`http://api.ems.test/inv/`+data._id, {
 			method: "put",
 			data: {
 				inv: {
 					available: true,
-					owner: '599c7ba76cd8a107bf6d4c13',
+					user_id: "none",
+          program_id: "ITWEB",
 					location: 'Room 3628'
 				},
 				item: {},
@@ -87,8 +89,8 @@ class Dashboard extends Component {
 						break
 					default:
 						this.setState({
-							tickets: ticketData.filter((ticket)=> (ticket.user.username === user.username)),
-							inventory: res.data.data.filter((inv)=> (inv.user.username === user.username)),
+							tickets: ticketData.filter((ticket)=> (ticket.user_id === user.username)),
+							inventory: res.data.data.filter((inv)=> (inv.user_id === user.username)),
 							user: user
 						})
 						break
@@ -99,7 +101,6 @@ class Dashboard extends Component {
 			})
 		})
 		.catch(error => {
-			console.log(error)
 			alert(error)
 		})
   }
@@ -165,7 +166,6 @@ class Dashboard extends Component {
 			ticketData.user = newTickets[index].user
 			newTickets[index] = ticketData
 			newTickets[index].info = res.data.data[1]
-			console.log(res.data)
       this.setState({
 				tickets: newTickets
 			})
@@ -209,6 +209,40 @@ class Dashboard extends Component {
 	}
 
   render() {
+		console.log(this.state.inventory)
+		const headers = ['ID', 'Owner', 'Borrowed', '']
+		const items = this.state.inventory
+			.sort((a,b) => {
+				const order = { Computer: 1, Cord: 2, Accessory: 3 }
+				return order[a.kind] - order[b.kind]
+			})
+			.filter(a => a.user.username !== 'none')
+			.map((inv, index) => {
+				let button
+				let id = {
+					data: inv,
+					label: inv.itreID
+				}
+				if (this.state.user.role === 'Admin') {
+					button = {
+						click: () => this.edit(inv),
+						label: 'Edit'
+					}
+				} else {
+					button = {
+						click: () => this.checkIn(index),
+						label: 'Return'
+					}
+				}
+
+				return ({
+					id: id,
+					owner: inv.user.username === 'none' ? inv.program.name : inv.user.first + ' ' + inv.user.last,
+					date: moment(inv.borrowed).format('M/D'),
+					button: button,
+					position: index
+				})
+			})
     return (
 			<div className="main flex">
 				{ this.state.redirect && this.state.redirect }
@@ -234,24 +268,12 @@ class Dashboard extends Component {
 				<div className="side-column">
 					<h2>Equipment in Use</h2>
 						{ this.state.inventory.length > 0 &&
- 						 this.state.inventory
-							.sort((a,b) => {
-								const order = { Computer: 1, Cord: 2, Accessory: 3 }
-								return order[a.kind] - order[b.kind]
-							})
-							.map((inv, index) => (
-								<Item
-									type={'dashboard'}
-									key={inv._id}
-									data={inv}
-									position={index}
-									checkOut={this.checkOut}
-									checkIn={this.checkIn}
-									edit={this.editInv}
-									/>
-							))
+							<Table
+ 		 					headers={headers}
+ 		 					items={items}
+ 		 					change={this.change}
+ 		 				/>
 						}
-						{ this.state.inventory.length <= 0 && 'You have no equipment at the moment.' }
 				</div>
 			</div>
     )

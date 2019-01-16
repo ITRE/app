@@ -1,5 +1,6 @@
 .low-select {
   display: flex;
+  flex-flow: row wrap;
   margin: auto;
   width: 100%;
 
@@ -28,16 +29,19 @@
   }
 
   .selectLabel {
+    align-items: center;
     border: solid 2px $blue;
-    border-left: 0;
     box-sizing: border-box;
     color: $blue;
     cursor: pointer;
-    display: block;
+    display: flex;
+    flex: 1;
+    justify-content: center;
     padding: 10px 15px;
     margin: 0;
+    min-height: 50px;
+    min-width: 120px;
     text-align: center;
-    width: 100%;
 
     &:hover {
       background: $orange;
@@ -51,6 +55,24 @@
   display: flex;
   flex-flow: column;
   margin: 15px auto;
+
+  select {
+    background-color: transparent;
+    border: 1px solid $blue;
+    border-radius: 0;
+    box-sizing: border-box;
+    color: $black;
+    font-family: Muli;
+    height: 40px;
+    margin: 0;
+    padding: 8px 10px;
+    text-align: center;
+
+    &:focus {
+      outline: $orange auto 2px;
+      border-color: $orange;
+    }
+  }
 }
 
 .selectBox {
@@ -82,6 +104,43 @@
 
     &::-ms-expand {
       display: none;
+    }
+  }
+
+  &:disabled {
+    color: $grey;
+    background-image: none;
+  }
+}
+
+.user_info {
+  display: flex;
+  flex-flow: row wrap;
+
+  .select,
+  .selectBox {
+    width: 100%;
+  }
+}
+
+@media(min-width: 750px) {
+  .user_info {
+    .select {
+      flex: 1;
+      margin-right: 20px;
+      min-width: 40%;
+    }
+
+    .selectBox {
+      width: 100%;
+    }
+  }
+
+  .low-select {
+    .selectLabel {
+      border-left: 0;
+      display: block;
+      min-height: 0px;
     }
   }
 }

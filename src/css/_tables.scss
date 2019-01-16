@@ -1,0 +1,26 @@
+.line-item {
+  align-items: center;
+  border-bottom: 3px solid $orange;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  text-align: left;
+}
+
+.table_column {
+  box-sizing: border-box;
+  flex: 2;
+  margin: 5px auto;
+  min-width: 10%;
+
+  &:last-child {
+    text-align: center;
+    flex: none;
+  }
+
+  &.role,
+  &.room,
+  &.date {
+    flex: 1;
+  }
+}

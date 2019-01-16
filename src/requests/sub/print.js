@@ -38,14 +38,14 @@ class Print extends Component {
 				tried: newTried
 			}, () => {
 				const info = {...this.state}
-				this.props.test(info)
+				this.props.setInfo(info)
 			})
 		} else {
 	    this.setState({
 				[name]: value
 			}, () => {
 				const info = {...this.state}
-				this.props.test(info)
+				this.props.setInfo(info)
 			})
 		}
 	}
@@ -53,7 +53,7 @@ class Print extends Component {
   render() {
     return (
 			<section className="field-group">
-				<h2>Print</h2>
+				<h2>Print Information</h2>
 				<Input
 					title='What is the full file path of the file to be printed?'
 					name='path'

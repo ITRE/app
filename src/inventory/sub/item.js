@@ -28,7 +28,6 @@ class Item extends Component {
   info() {
     const {item, itreID, user, program, location, kind, available} = this.props.data
     const owner = (user.first === 'none' ? program.name : user.first+' '+user.last)
-    // this.props.data
     alert(`
       ID: ${itreID}
       Kind: ${kind}
@@ -54,10 +53,10 @@ class Item extends Component {
     if (user.role === 'Admin') {
       return (
         <div key={_id} className="line-item">
-          <button onClick={ this.info }>{ item.brand } { item.model }</button>
-          <p>{ owner }</p>
-          <p>{moment(this.props.data.borrowed).format('M/D')}</p>
-          <button onClick={ this.edit }>Edit</button>
+          <button className="link table_column" onClick={ this.info }>{ item.brand } { item.model }</button>
+          <p className="table_column">{ owner }</p>
+          <p className="table_column date">{moment(this.props.data.borrowed).format('M/D')}</p>
+          <p className="table_column"><button className="table_column" onClick={ this.edit }>Edit</button></p>
         </div>
       )
     } else {
@@ -81,7 +80,7 @@ class Item extends Component {
     const owner = (this.props.data.user.first === 'none' ? program.name : this.props.data.user.first+' '+this.props.data.user.last)
     const user = jwt.decode(localStorage.getItem('access token'))
     const id = (user.role === 'Admin' ?
-      <button className="link column" onClick={ this.info }>{ itreID }</button> : 
+      <button className="link column" onClick={ this.info }>{ itreID }</button> :
       <button className="link column">{ itreID }</button>)
     let button
 

@@ -13,9 +13,39 @@ class Access extends Component {
 			type: 'Folder / Server',
 			location: '',
 			desc: '',
-			start: ''
+			start: '',
+			errors: {
+				location: '',
+			  desc: '',
+			  start: ''
+			},
+			validated: false
 		}
+		this.validate = this.validate.bind(this)
     this.change = this.change.bind(this)
+	}
+
+	validate() {
+		const errors = {...this.state.errors}
+		let success = true
+		for (const key in errors) {
+			if(errors[key]) {
+				success = false
+			} else if (errors[key]==='' && !this.state[key]) {
+				success = false
+				switch(key) {
+					case 'kind':
+						errors[key] = 'Please make a selection'
+						break
+					default:
+						errors[key] = 'This field cannot be left blank'
+				}
+		    this.setState({
+					errors: errors
+				})
+			}
+		}
+		return success
 	}
 
 	componentDidMount() {
@@ -39,14 +69,14 @@ class Access extends Component {
 				tried: newTried
 			}, () => {
 				const info = {...this.state}
-				this.props.test(info)
+				this.props.setInfo(info)
 			})
 		} else {
 	    this.setState({
 				[name]: value
 			}, () => {
 				const info = {...this.state}
-				this.props.test(info)
+				this.props.setInfo(info)
 			})
 		}
 	}
@@ -54,7 +84,7 @@ class Access extends Component {
   render() {
     return (
 			<section className="field-group">
-				<h2>Access</h2>
+				<h2>Access Information</h2>
 				<Select
 					title='What kind of access do you need?'
 					name='type'

@@ -35,10 +35,9 @@ class Tickets extends Component {
 				default:
 					this.setState({
 						tickets: res.data.data.filter((ticket)=> (
-							ticket.user.username === this.state.user.username || ticket.for === this.state.user.first+' '+this.state.user.last
+							ticket.user_id === this.state.user.username || ticket.requestor_id === this.state.user.username
 						))
 					})
-					break
 			}
     })
 		.catch(error => {
@@ -145,26 +144,63 @@ class Tickets extends Component {
 			<div className="main">
 				<h1>Requests</h1>
 				{ this.state.redirect && this.state.redirect }
-				{ this.state.tickets.length > 0 &&
-					this.state.tickets
-					.sort((a,b) => {
-						const order = { 'Awaiting Reply': 1, 'New': 2, 'Seen': 2, 'In Progress': 2, 'On Hold': 2, 'Reopened': 2, 'Completed': 3, 'Closed': 4 }
-						return order[a.status] - order[b.status] || a.added - b.added
-					})
-					.map( (ticket, index) => {
-						return (
-							<Request
-								key={ticket._id}
-								ticket={ticket}
-								ind={index}
-								viewer={this.state.user}
-								edit={this.edit}
-								seen={this.seen}
-								complete={this.complete}
-							/>
-						)
-					})
-				}
+				<section className="field-group">
+					<h2>Open</h2>
+					{ this.state.tickets.length > 0 &&
+						this.state.tickets
+						.filter(a => a.status !== 'Completed' && a.status !== 'Closed')
+						.sort((a,b) => {
+							const order = {
+								'Awaiting Reply': 1,
+								'New': 2,
+								'Reopened': 3,
+								'Seen': 4,
+								'In Progress': 5,
+								'On Hold': 6, }
+							return order[a.status] - order[b.status] || a.added - b.added
+						})
+						.map( (ticket, index) => {
+							return (
+								<Request
+									key={ticket._id}
+									ticket={ticket}
+									ind={index}
+									viewer={this.state.user}
+									edit={this.edit}
+									seen={this.seen}
+									complete={this.complete}
+								/>
+							)
+						})
+					}
+				</section>
+				<section className="field-group">
+					<h2>Closed</h2>
+
+					{ this.state.tickets.length > 0 &&
+						this.state.tickets
+						.filter(a => a.status === 'Completed' || a.status === 'Closed')
+						.sort((a,b) => {
+							const order = {
+							'Completed': 1,
+							'Closed': 2}
+							return order[a.status] - order[b.status] || a.added - b.added
+						})
+						.map( (ticket, index) => {
+							return (
+								<Request
+									key={ticket._id}
+									ticket={ticket}
+									ind={index}
+									viewer={this.state.user}
+									edit={this.edit}
+									seen={this.seen}
+									complete={this.complete}
+								/>
+							)
+						})
+					}
+				</section>
 				{ this.state.tickets.length <= 0 && <p>You have not submitted any requests</p>}
 			</div>
     );

@@ -1,20 +1,14 @@
-.line-item {
-  align-items: center;
-  border-bottom: 3px solid $orange;
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  text-align: left;
-}
+
 
 .request-item {
-  border: 1px solid $grey;
+  border: 4px solid $blue;
   cursor: pointer;
   margin-bottom: 20px;
   padding: 10px;
 
   &:hover {
-    border: 1px solid $blue;
+    background-color: lighten( $orange, 55%);
+    border: 4px solid $orange;
   }
 }
 

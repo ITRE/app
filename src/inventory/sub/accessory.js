@@ -44,7 +44,7 @@ class Accessory extends Component {
   render() {
     return (
 			<section className="field-group">
-				<h2>Accessory</h2>
+				<h2>Accessory Information</h2>
 				<Input
 					title='Brand'
 					name='brand'

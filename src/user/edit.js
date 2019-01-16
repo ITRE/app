@@ -5,6 +5,7 @@ import Swal from 'sweetalert2'
 
 import Input from '../form/input.js'
 import Users from '../form/users.js'
+import Programs from '../form/programs.js'
 import Select from '../form/select.js'
 
 const jwt = require('jsonwebtoken')
@@ -31,7 +32,6 @@ class EditUser extends Component {
 			  first: '',
 			  last: '',
 			  program: '',
-			  super: '',
 			  room: ''
 			},
 			registered: false,
@@ -47,7 +47,11 @@ class EditUser extends Component {
 		const errors = {...this.state.errors}
 		let success = true
 		for (const key in errors) {
-			if(errors[key]) {
+			if (key === 'password' || key === 'confirm') {
+				if (this.state.password === '') {
+					continue
+				}
+			} else if (errors[key]) {
 				success = false
 			} else if (errors[key]==='' && !this.state[key]) {
 				success = false
@@ -72,14 +76,14 @@ class EditUser extends Component {
 
   componentDidMount() {
 		this.setState({
-		  role: this.props.role ? this.props.role : 'Staff',
-		  email: this.props.email ? this.props.email : '',
-		  phone: this.props.phone ? this.props.phone : '',
-		  first: this.props.first ? this.props.first : '',
-		  last: this.props.last ? this.props.last : '',
-		  program: this.props.program ? this.props.program : '',
-		  super: this.props.super ? this.props.super : '',
-		  room: this.props.room ? this.props.room : ''
+		  role: this.props.location.state.user.role ? this.props.location.state.user.role : 'Staff',
+		  email: this.props.location.state.user.email ? this.props.location.state.user.email : '',
+		  phone: this.props.location.state.user.phone ? this.props.location.state.user.phone : '',
+		  first: this.props.location.state.user.first ? this.props.location.state.user.first : '',
+		  last: this.props.location.state.user.last ? this.props.location.state.user.last : '',
+		  program: this.props.location.state.user.program ? this.props.location.state.user.program.code : '',
+		  super: this.props.location.state.user.super ? this.props.location.state.user.super.username : '',
+		  room: this.props.location.state.user.room ? this.props.location.state.user.room : ''
 		})
 	}
 
@@ -123,7 +127,30 @@ class EditUser extends Component {
 		if (!validated) {
 			alert('Not all fields were filled correctly. Please double check your information and try again.')
 		} else {
-
+			axios.put(`http://api.ems.test/user/${this.props.location.state.user.username}`, {
+				password: this.state.password,
+			  role: this.state.role,
+			  email: this.state.email,
+			  phone: this.state.phone,
+			  first: this.state.first,
+			  last: this.state.last,
+			  program: this.state.program,
+			  super: this.state.super,
+			  room: this.state.room,
+			})
+	    .then(res => {
+				Swal({
+					title: 'Success!',
+					type: 'success',
+					text: 'User edited.',
+				})
+				this.setState({
+					registered: <Redirect to={'/admin/accounts'} />
+				})
+	    })
+	    .catch(error => {
+	      alert(error)
+	    })
 		}
 	}
 
@@ -165,7 +192,7 @@ class EditUser extends Component {
 							name='role'
 							error={this.state.errors.role}
 							options={['Admin', 'Staff', 'Student', 'Temp', 'Other']}
-							disabled={this.props.role && true}
+							disabled={this.state.role && true}
 							value={this.state.role}
 							handleChange={this.change}
 							placeholder='Select One'
@@ -232,18 +259,16 @@ class EditUser extends Component {
 							handleChange={this.change}
 							placeholder='Select One'
 						/>
-						<Select
-							title='Program:'
+						<Programs
+							title='Program'
 							name='program'
-							error={this.state.errors.program}
-							options={['Administration', 'IT & Web', 'LTAP', 'Aviation', 'Bike / Ped', 'Econ / Policy', 'Highway Systems', 'Modeling / Comp', 'Port / Ferry', 'School Planning / Transpo', 'Transit', 'TIMS', 'Graphic Design', 'Other']}
 							value={this.state.program}
 							handleChange={this.change}
 							placeholder='Select One'
 						/>
 					</section>
 
-					<button type="submit" className="primary" value="Submit">Register</button>
+					<button type="submit" className="primary" value="Submit">Update</button>
 					<button type="button" onClick={this.cancel}>Cancel</button>
 	      </form>
 			</div>

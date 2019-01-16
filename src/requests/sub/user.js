@@ -19,8 +19,8 @@ class NewUser extends Component {
 				last: '',
 				email: '',
 				phone: '',
-				program: '',
-				super: '',
+				program_id: '',
+				super_id: '',
 				room: '',
 				start: '',
 				access: '',
@@ -43,8 +43,8 @@ class NewUser extends Component {
 					last: this.props.info.last ? this.props.info.last : '',
 					email: this.props.info.email ? this.props.info.email : '',
 					phone: this.props.info.phone ? this.props.info.phone : '',
-					program: this.props.info.program ? this.props.info.program : '',
-					super: this.props.info.super ? this.props.info.super : '',
+					program_id: this.props.info.program_id ? this.props.info.program_id : '',
+					super_id: this.props.info.super_id ? this.props.info.super_id : '',
 					room: this.props.info.room ? this.props.info.room : '',
 					start: this.props.info.start ? moment(this.props.info.start).format('YYYY-MM-DD') : '',
 					access: this.props.info.access ? this.props.info.access : '',
@@ -80,13 +80,14 @@ class NewUser extends Component {
 			user: user
 		}, () => {
 			const info = {...this.state.user}
-			this.props.test(info)
+			this.props.setInfo(info)
 		})
 	}
 
   render() {
     return (
-			<div>
+			<section className="field-group">
+				<h2>New User Information</h2>
 				<Select
 					title='Role:'
 					name='role'
@@ -129,15 +130,15 @@ class NewUser extends Component {
 				/>
 				<Program
 					title='Program:'
-					name='program'
-					value={this.state.user.program}
+					name='program_id'
+					value={this.state.user.program_id}
 					handleChange={this.change}
 					placeholder='Select One'
 				/>
 				<Users
 					title='Supervisor:'
-					name='super'
-					value={this.state.user.super}
+					name='super_id'
+					value={this.state.user.super_id}
 					handleChange={this.change}
 					placeholder='Select One'
 				/>
@@ -193,7 +194,7 @@ class NewUser extends Component {
 					value={this.state.user.other}
 					handleChange={this.change}
 				/>
-			</div>
+			</section>
     )
   }
 }

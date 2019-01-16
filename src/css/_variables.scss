@@ -2,8 +2,11 @@ $test: #A9671B;
 
 $white: #FFFFFF;
 $black: #000000;
-$darkGrey: #606060;
-$grey: #f0f0f0;
+$darkGrey: lighten( $black, 40%);
+$grey: lighten( $black, 60%);
+$lightGrey: lighten( $black, 90%);
+
+$error: red;
 
 $blue: #526179;
 $orange: #A9671B;

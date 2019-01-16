@@ -1,5 +1,5 @@
 .field-group {
-  margin: 50px auto 25px;
+  margin: 35px auto;
 
   &:first-child {
     margin: 25px auto;
@@ -8,8 +8,20 @@
   h1,
   h2,
   .headers {
-    border-bottom: 1px solid $grey;
+    border-bottom: 1px solid $lightGrey;
     color: $darkGrey;
+    margin-bottom: 0.5em;
+  }
+
+  .field-group h2 {
+    color: $orange;
+    font-size: 1.4em;
+  }
+
+  span {
+    font-size: 0.8em;
+    font-weight: lighter;
+    margin-top: 5px;
   }
 }
 
@@ -25,8 +37,8 @@ button {
   border-radius: 5px;
   box-sizing: border-box;
   color: white;
-  padding: 8px 10px;
-  margin: 5px;
+  padding: 10px 20px;
+  margin-right: 15px;
 
   &.link {
     background-color: transparent;
@@ -64,7 +76,7 @@ button {
   border-radius: 0;
   box-sizing: border-box;
 	display: block;
-  margin: 20px auto;
+  margin: 25px auto 0;
 	padding: 0;
 	position: relative;
 	transition: border-color .3s;
@@ -96,6 +108,14 @@ button {
     transition-property: color, transform;
   }
 
+  &.popup {
+    padding: 0;
+
+    label {
+      top: -20px;
+    }
+  }
+
   input,
   textarea {
     background-color: transparent;
@@ -108,14 +128,75 @@ button {
     margin: 0;
     padding: 10px;
     text-align: center;
+    width: 100%;
 
     &:focus,
-    &:not([value=""]) {
+    &:not([value=""]),
+    &[type="date"],
+    &:disabled {
       outline: none;
+
+      ~ label {
+       transform: translateY(-20px)
+      }
+    }
+
+    &:focus {
+      outline: $orange auto 2px;
+      border-color: $orange;
+    }
+
+    &:disabled {
+      color: $grey;
 
       + label {
        transform: translateY(-20px)
-     }
+      }
+    }
+  }
+}
+
+.textarea {
+  border-radius: 0;
+  box-sizing: border-box;
+	display: block;
+  margin: 25px auto;
+	padding: 0;
+	position: relative;
+	transition: border-color .3s;
+  width: 100%;
+
+  label {
+    background-color: $white;
+    box-sizing: border-box;
+    font-family: Muli;
+    left: 10px;
+    margin: 0;
+    overflow: hidden;
+    padding: 3px;
+    pointer-events: none;
+    position: absolute;
+    top: -13px;
+    transition-duration: .3s;
+    transition-property: color, transform;
+  }
+
+  textarea {
+    background-color: transparent;
+		border: 1px solid $blue;
+    border-radius: 0;
+    box-sizing: border-box;
+    color: $black;
+    font-family: Muli;
+  	height: 40px;
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+
+    &:focus {
+      outline: $orange auto 2px;
+      border-color: $orange;
     }
   }
 }
@@ -125,18 +206,32 @@ form {
   margin: 10px auto 20px;
 }
 
-.form-input {
-  border-radius: 0;
-  box-sizing: border-box;
-	display: block;
-	height: 40px;
-  margin: auto;
-	padding: 0;
-	position: relative;
-	transition: border-color .3s;
-  width: 100%;
-}
-
 .textarea label {
   margin-bottom: 10px;
+}
+
+.error {
+  input,
+  textarea,
+  select,
+  .selectBox {
+    border-color: $error;
+  }
+
+  label,
+  span {
+    color: $error;
+  }
+}
+
+
+
+@media(min-width: 750px) {
+  .flex {
+    .form-group {
+      flex: 1;
+      margin-right: 20px;
+      min-width: 40%;
+    }
+  }
 }

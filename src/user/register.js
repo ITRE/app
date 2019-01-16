@@ -6,6 +6,7 @@ import Swal from 'sweetalert2'
 import Input from '../form/input.js'
 import Users from '../form/users.js'
 import Select from '../form/select.js'
+import Program from '../form/programs.js'
 
 class Register extends Component {
 	constructor(props) {
@@ -18,8 +19,8 @@ class Register extends Component {
 		  phone: '',
 		  first: '',
 		  last: '',
-		  program: '',
-		  super: '',
+		  program_id: '',
+		  super_id: '',
 		  room: '',
 			errors: {
 				username: '',
@@ -29,8 +30,8 @@ class Register extends Component {
 			  phone: '',
 			  first: '',
 			  last: '',
-			  program: '',
-			  super: '',
+			  program_id: '',
+			  super_id: '',
 			  room: ''
 			},
 			registered: false,
@@ -66,28 +67,19 @@ class Register extends Component {
 	}
 
   componentDidMount() {
-		if (this.props.type==='Admin') {
-			const errors = {...this.state.errors}
-			for (const key in errors) {
-				if (this.state[key] === '') {
-					errors[key] = true
-			    this.setState({
-						errors: errors
-					})
-				}
-			}
-		} else {
+		const {state} = this.props.location
+		if (state) {
 			this.setState({
-				username: this.props.username ? this.props.username : '',
-			  password: this.props.password ? this.props.password : '',
-			  role: this.props.role ? this.props.role : 'Staff',
-			  email: this.props.email ? this.props.email : '',
-			  phone: this.props.phone ? this.props.phone : '',
-			  first: this.props.first ? this.props.first : '',
-			  last: this.props.last ? this.props.last : '',
-			  program: this.props.program ? this.props.program : '',
-			  super: this.props.super ? this.props.super : '',
-			  room: this.props.room ? this.props.room : ''
+				username: state.info.last ? (state.info.first.substring(0, 1)+state.info.last).toLowerCase() : '',
+				password: state.info.password ? state.info.password : '',
+				role: state.info.role ? state.info.role : 'Staff',
+				email: state.info.email ? state.info.email : '',
+				phone: state.info.phone ? state.info.phone : '',
+				first: state.info.first ? state.info.first : '',
+				last: state.info.last ? state.info.last : '',
+				program_id: state.info.program_id ? state.info.program_id : '',
+				super_id: state.info.super_id ? state.info.super_id : '',
+				room: state.info.room ? state.info.room : ''
 			})
 		}
 	}
@@ -122,6 +114,7 @@ class Register extends Component {
 	submit(event) {
 		event.preventDefault()
 		const validated = this.validate()
+		const {state} = this.props.location
 		if (!validated) {
 			alert('Not all fields were filled correctly. Please double check your information and try again.')
 		} else {
@@ -133,32 +126,24 @@ class Register extends Component {
 			  phone: this.state.phone,
 			  first: this.state.first,
 			  last: this.state.last,
-			  program: this.state.program,
-			  super: this.state.super,
+			  program_id: this.state.program_id,
+			  super_id: this.state.super_id,
 			  room: this.state.room,
 			}
-			if (this.props.type === 'Admin') {
+			if (state) {
 				const info = {
-					role: this.state.role,
-					first: this.state.first,
-					last: this.state.last,
-					email: this.state.email,
-					phone: this.state.phone,
-					program: this.state.program,
-					super: this.state.super,
-					room: this.state.room,
-					start: this.props.start,
-					access: this.props.access,
-					software: this.props.software,
-					hardware: this.props.hardware,
-					account: this.props.account,
-					other: this.props.other,
+					start: state.info.start,
+					access: state.info.access,
+					software: state.info.software,
+					hardware: state.info.hardware,
+					account: state.info.account,
+					other: state.info.other,
 				}
 				this.setState({
 					registered: <Redirect to={{
 						pathname: '/admin/equipment',
 						state: {
-							ticket: this.props.ticket,
+							ticket: state.ticket,
 							user: user,
 							info: info
 						}
@@ -171,9 +156,14 @@ class Register extends Component {
 					withCredentials: 'include'
 				})
 		    .then(res => {
-						this.setState({
-							registered: <Redirect to={{pathname: '/dashboard'}}/>
-						})
+					Swal({
+					  title: 'Success!',
+					  type: 'success',
+					  text: 'Account registered!',
+					})
+					this.setState({
+						registered: <Redirect to={{pathname: '/dashboard'}}/>
+					})
 		    })
 				.catch(error => {
 					Swal({
@@ -281,18 +271,17 @@ class Register extends Component {
 						/>
 						<Users
 							title='Supervisor:'
-							name='super'
-							error={this.state.errors.super}
-							value={this.state.super}
+							name='super_id'
+							error={this.state.errors.super_id}
+							value={this.state.super_id}
 							handleChange={this.change}
 							placeholder='Select One'
 						/>
-						<Select
+						<Program
 							title='Program:'
-							name='program'
-							error={this.state.errors.program}
-							options={['Administration', 'IT & Web', 'LTAP', 'Aviation', 'Bike / Ped', 'Econ / Policy', 'Highway Systems', 'Modeling / Comp', 'Port / Ferry', 'School Planning / Transpo', 'Transit', 'TIMS', 'Graphic Design', 'Other']}
-							value={this.state.program}
+							name='program_id'
+							error={this.state.errors.program_id}
+							value={this.state.program_id}
 							handleChange={this.change}
 							placeholder='Select One'
 						/>

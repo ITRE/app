@@ -47,7 +47,8 @@ class Cord extends Component {
 
   render() {
     return (
-			<div>
+		<section className="field-group">
+			<h2>Cord Information</h2>
 				<Input
 					title='Brand'
 					name='brand'
@@ -112,7 +113,7 @@ class Cord extends Component {
 					handleChange={this.change}
 					placeholder='Price'
 				/>
-			</div>
+		</section>
     )
   }
 }

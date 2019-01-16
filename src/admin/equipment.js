@@ -21,6 +21,7 @@ class AdminNewEquipment extends Component {
 
 
 	change(event) {
+		console.log(this.state)
 		const value = event.target.value
     const name = event.target.name
 		let equipment = [...this.state.currentEquipment]
@@ -54,16 +55,7 @@ class AdminNewEquipment extends Component {
 			equipment: list
 		})
 	}
-/*
-ticket: this.props.ticket,
-user: user,
-start: this.props.start,
-access: this.props.access,
-software: this.props.software,
-hardware: this.props.hardware,
-account: this.props.account,
-other: this.props.other
-*/
+
 	review() {
 		this.setState({
 			cancel: <Redirect to={{
@@ -83,29 +75,32 @@ other: this.props.other
 	}
 
   render() {
-		let info = []
+
+			console.log(this.props.location.state)
+		let userInfo = []
 		let value = {}
 		let multiple = {
 			computer: false,
 			cord: false,
 			accessory: false
 		}
-		const parentState = this.props.location.state
+		const {ticket, user, info} = this.props.location.state
 
-		for (const key in parentState.user) {
+		for (const key in user) {
 			switch(key) {
 				case 'username':
 				case 'first':
 				case 'last':
 				case 'role':
-					info.push(<p key={key}><strong>{key}:</strong> {parentState.user[key]}</p>)
+				case 'program_id':
+					userInfo.push(<p key={key}><strong>{key}:</strong> {user[key]}</p>)
 					break
 				default:
 					break
 			}
 		}
 
-		parentState.info.hardware.map(item => {
+		info.hardware.map(item => {
 			switch(item) {
 				case ('Desktop Computer' || 'Laptop Computer' || 'Tablet / Mobile Computer' || 'Other'):
 					value.computer = this.state.currentEquipment
@@ -126,11 +121,11 @@ other: this.props.other
 		})
 
 		return (
-			<div className='main'>
+			<div className='main flex'>
 				{this.state.cancel && this.state.cancel}
 				<div className='main-column'>
 					<div>
-						<h2>Add Equipment to New User</h2>
+						<h1>Add Equipment to New User</h1>
 						<Equipment
 							display={multiple}
 							multiple={multiple}
@@ -138,32 +133,37 @@ other: this.props.other
 							handleChange={this.change}
 						/>
 					</div>
-					<div>
-						<h3>Purchase Equipment for New User</h3>
-		        <NewInventory
-							user={parentState.user}
-							account={parentState.info.account}
-							pushNew={this.pushNew}
-						/>
-					</div>
+					<section className="field-group">
+						<h2>Purchase Equipment for New User</h2>
+		        { this.props.location.state.info.account &&
+							<NewInventory
+								user={user}
+								account={info.account}
+								pushNew={this.pushNew}
+							/>
+						}
+						{ !this.props.location.state.info.account &&
+							<p>New equipment cannot be purchased without an account number.</p>
+						}
+					</section>
 				</div>
 
 				<div className="side-column">
 					<div>
 						<h2>Equipment</h2>
-							<button onClick={this.review}>Review and Complete</button>
+							<button className="primary" onClick={this.review}>Review and Complete</button>
 							<button onClick={this.cancel}>Cancel</button>
 							{ Object.keys(this.state.equipment).map((key, index) => <p key={index}><strong>{key}: </strong>{this.state.equipment[key]}</p>) }
 					</div>
 					<div>
 							<h3>Requested Hardware</h3>
-							{parentState.info.hardware.map(item => <p key={item}>{item}</p>)}
+							{info.hardware.map(item => <p key={item}>{item}</p>)}
 							<h3>Requested Software</h3>
-							{parentState.info.software.map(item => <p key={item}>{item}</p>)}
+							{info.software.map(item => <p key={item}>{item}</p>)}
 					</div>
 					<div>
 						<h3>User Info</h3>
-						{info}
+						{userInfo}
 					</div>
 				</div>
 			</div>

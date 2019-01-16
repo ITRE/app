@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import axios from 'axios'
+import Swal from 'sweetalert2'
+import moment from 'moment'
 
-import Item from './sub/item'
-import Checkbox from '../form/checkbox.js'
+import Table from '../form/table.js'
 
 const jwt = require('jsonwebtoken')
 
@@ -50,6 +51,7 @@ class InventoryList extends Component {
 		})
 	}
 
+
 	change(event) {
 		const value = event.target.value
     const name = event.target.name
@@ -73,38 +75,124 @@ class InventoryList extends Component {
 			</div>
 		)
 	}
+		checkOut(index) {
+			const data = this.state.inventory[index]
+			Swal({
+			  title: 'Borrow Equipment',
+				html: `
+					<div class="form-group popup">
+						<label for="request_date">When do you need this equipment?</label>
+						<input id="request_date" type="date" />
+					</div>
+					<div class="form-group popup">
+						<label for="return_date">When will you return this equipment?</label>
+						<input id="return_date" type="date" />
+					</div>
+					<div class="form-group popup">
+						<label for="notes">Additional Information</label>
+						<input id="notes" type="text" />
+					</div>
+					<div class="caveat">
+						<p>
+							Please keep in mind that requests for equipment must be submitted at least a week in advance.
+						</p>
+						<p>
+							ITRE IT & Web will do their best to fulfill any requests, but cannot guarantee
+							the availability of any piece of equipment.
+						</p>
+					</div>`,
+			  text: 'When will you return this equipment?',
+				showCancelButton: true,
+			  confirmButtonText: 'Borrow',
+			  showLoaderOnConfirm: true,
+			  preConfirm: (date) => {
+					const returnDate = document.getElementById('return_date').value
+					const requestDate = document.getElementById('request_date').value
+					if (!date || returnDate === '' || requestDate === '') {
+						Swal.showValidationMessage(
+							`Request Failed: Both Return and Request Dates Must be Selected.`
+						)
+					} else if (moment().isAfter(returnDate) || moment().isAfter(requestDate)) {
+						Swal.showValidationMessage(
+		          `Request failed: Return and Request dates must be after the current date.`
+		        )
+					} else if (moment(requestDate).isAfter(returnDate)) {
+						Swal.showValidationMessage(
+		          `Request failed: Request date must be after the current date.`
+		        )
+					} else if (moment(requestDate).diff(moment().format('YYYY-MM-DD'), 'days') < 7) {
+						Swal.showValidationMessage(
+							`Request failed: Requests to borrow equipment must be submitted at least one week in advance.`
+						)
+					}
 
-	checkOut(index) {
-		const data = this.state.inventory[index]
-		axios(`http://api.ems.test/inv/${data._id}`, {
-			method: "put",
-			data: {
-				inv: {
-					available: false,
-					user: this.state.user.id,
-					location: 'Room '+this.state.user.room,
-					borrowed: Date.now()
-				},
-				item: {},
-				log: {
-					type: "Borrow",
-					staff: this.state.user.first + ' ' + this.state.user.last,
-					note: "Checked out"
-				}
-			},
-			withCredentials: 'include'
-		})
-    .then(res => {
-			const newItem = res.data.data
-			let inv = [...this.state.inventory]
-			inv[index] = newItem[0]
-			inv[index].item = newItem[1]
-			this.setState({ inventory: inv })
-		})
-		.catch(error => {
-	    alert(error)
-	  })
-  }
+			    return axios.post('http://api.ems.test/tickets', {
+						ticket: {
+							user_id: this.state.user.username,
+							requestor_id: this.state.user.username,
+							kind: 'Borrow'
+						},
+						kind: {
+							item: data._id,
+							return_date: returnDate,
+							request_date: requestDate,
+							info: document.getElementById('notes').value
+						}
+					})
+			      .then(response => {
+			        if (!response.data.success) {
+			          throw new Error(response.statusText)
+			        }
+
+							axios(`http://api.ems.test/inv/${data._id}`, {
+								method: "put",
+								data: {
+									inv: {
+										available: false,
+									},
+									item: {},
+									log: {
+										type: "Borrow Request",
+										staff: this.state.user.first + ' ' + this.state.user.last,
+										note: "Ticket ID: " + response.data.data[0]._id
+									}
+								},
+								withCredentials: 'include'
+							})
+					    .then(res => {
+								const newItem = res.data.data
+								let inv = [...this.state.inventory]
+								inv[index] = newItem[0]
+								inv[index].item = newItem[1]
+								this.setState({
+									inventory: inv
+								})
+				        return
+							})
+							.catch(error => {
+				        Swal.showValidationMessage(
+				          `Request failed: ${error}`
+				        )
+						  })
+			      })
+			      .catch(error => {
+			        Swal.showValidationMessage(
+			          `Request failed: ${error}`
+			        )
+			      })
+
+			  },
+			  allowOutsideClick: () => !Swal.isLoading()
+			}).then((result) => {
+				if (result.value) {
+			    Swal({
+			      title: 'Success',
+						type: 'success',
+			      text: 'Your request has been submitted for review.'
+			    })
+			  }
+			})
+		}
 
 	checkIn(index) {
 		const data = this.state.inventory[index]
@@ -139,52 +227,70 @@ class InventoryList extends Component {
   }
 
   render() {
-		const type = (this.state.user.role ==='admin'?'admin':'list')
+		const headers = ['ID', 'Kind', 'Owner', 'Room', '']
+		const items = this.state.inventory
+			.sort((a,b) => {
+				const order = { Computer: 1, Cord: 2, Accessory: 3 }
+				return order[a.kind] - order[b.kind]
+			})
+			.map((inv, index) => {
+				let button
+				let id = {
+					data: inv,
+					label: inv.itreID
+				}
+				if (this.state.user.role === 'Admin') {
+          button = {
+						click: () => this.edit(inv),
+						label: 'Edit'
+					}
+					id = {
+						click: this.info,
+						label: inv.itreID
+					}
+        } else if (inv.available) {
+          button = {
+						click: () => this.checkOut(index),
+						label: 'Borrow'
+					}
+        } else if (inv.user.username === this.state.user.username) {
+          button = {
+						click: () => this.checkIn(index),
+						label: 'Return'
+					}
+        } else {
+          button = {
+						click: null,
+						label: 'Unavailable'
+					}
+        }
+
+				return ({
+					id: id,
+					kind: inv.kind,
+					owner: inv.user.username === 'none' ? inv.program.name : inv.user.first + ' ' + inv.user.last,
+					room: inv.location,
+					button: button,
+					position: index
+				})
+			})
+
 		return (
 			<div className="main">
-				{ this.state.redirect && this.state.redirect }
 				<h1>Inventory</h1>
-				<section className="field-group">
-					<h2>Filter</h2>
-						<Checkbox
-							title=''
-							name='filters'
-							options={['Computer', 'Cord', 'Accessory']}
-							selectedOptions={this.state.filters}
-							handleChange={this.change}
-							buttons={true}
-						/>
-				</section>
-
-				<div className="field-group">
-					<div className="flex headers">
-		        <p className="column"><strong>ID</strong></p>
-		        <p className="column"><strong>Kind</strong></p>
-		        <p className="column"><strong>Owner</strong></p>
-		        <p className="column"><strong>Room</strong></p>
-		        <p className="column"></p>
-					</div>
-					{ this.state.inventory
-						.sort((a,b) => {
-							const order = { Computer: 1, Cord: 2, Accessory: 3 }
-							return order[a.kind] - order[b.kind]
-						})
-						.filter(a => this.state.filters.indexOf(a.kind) >= 0)
-						.map((inv, index) => (
-							<Item
-								type={type}
-								key={inv._id}
-								data={inv}
-								position={index}
-								checkOut={this.checkOut}
-								checkIn={this.checkIn}
-								edit={this.edit}
-								/>
-						))
-					}
-				</div>
+					{ this.state.redirect && this.state.redirect }
+				{ items.length > 0 &&
+				<Table
+					headers={headers}
+					items={items}
+					filterOptions={['Computer', 'Cord', 'Accessory']}
+					filters={this.state.filters}
+					filterCategory={'kind'}
+					change={this.change}
+				/>
+				}
 			</div>
-    );
+		)
   }
 }
 

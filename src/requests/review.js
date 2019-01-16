@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Redirect } from 'react-router-dom'
 import moment from 'moment'
+import Swal from 'sweetalert2'
 
 const jwt = require('jsonwebtoken')
 
@@ -14,19 +15,7 @@ class ReviewTicket extends Component {
     this.confirm = this.confirm.bind(this)
     this.cancel = this.cancel.bind(this)
 	}
-/*	oldInv: this.state.equipment,
-	newInv: this.state.newEquipment,
-	parent: this.props.location.state */
-	/*
-	ticket: this.props.ticket,
-	user: user,
-	start: this.props.start,
-	access: this.props.access,
-	software: this.props.software,
-	hardware: this.props.hardware,
-	account: this.props.account,
-	other: this.props.other
-	*/
+
 	complete() {
 			const { ticket } = this.props.location.state
 		axios.put(`http://api.ems.test/tickets/${ticket._id}`, {
@@ -46,7 +35,11 @@ class ReviewTicket extends Component {
 			})
 		})
 		.catch(error => {
-			alert(error)
+			Swal({
+				title: error.response.status+' Error',
+				type: 'error',
+				text:error.response.data.msg,
+			})
 		})
 	}
   confirm() {
@@ -61,6 +54,40 @@ class ReviewTicket extends Component {
 		}
   }
 
+	newInv(ids) {
+		const { user, info } = this.props.location.state
+		let batch = []
+		ids.map(id => {
+			batch.push({
+				kind: {
+				  account: info.account,
+				  need: info.start,
+				  type: id.type,
+				  tempItem: id._id
+				},
+				ticket: {
+					user_id: user.username, //for
+			  	requestor_id: ticket.requestor_id, //by
+			  	kind: 'Equipment'
+				}
+			})
+		})
+		axios.post(`http://api.ems.test/tickets/purchases`, {
+			batch: batch,
+			user: user
+		})
+		.then(res => {
+			this.complete()
+		})
+		.catch(error => {
+			Swal({
+				title: error.response.status+' Error',
+				type: 'error',
+				text:error.response.data.msg,
+			})
+		})
+	}
+
 	newUser() {
 			const { user, inventory } = this.props.location.state
 			axios('http://api.ems.test/user', {
@@ -69,7 +96,7 @@ class ReviewTicket extends Component {
 				withCredentials: 'include'
 			})
 			.then(res => {
-				const userID = res.data.data._id
+				const userID = res.data.data
 				const editInv = inventory.oldInv.map(item => { return {itreID: item, user: userID}})
 				axios.put(`http://api.ems.test/inv/batch`, {
 					batch: editInv,
@@ -86,21 +113,33 @@ class ReviewTicket extends Component {
 							user: userID
 						})
 						.then(res => {
-							this.complete()
+							this.newInv(res.data.data)
 						})
 						.catch(error => {
-							alert(error)
+							Swal({
+							  title: error.response.status+' Error',
+							  type: 'error',
+							  text:error.response.data.msg,
+							})
 						})
 					} else {
 						this.complete()
 					}
 				})
 				.catch(error => {
-					alert(error)
+					Swal({
+					  title: error.response.status+' Error',
+					  type: 'error',
+					  text:error.response.data.msg,
+					})
 				})
 		})
 		.catch(error => {
-			alert(error)
+			Swal({
+				title: error.response.status+' Error',
+				type: 'error',
+				text:error.response.data.msg,
+			})
 		})
 	}
 
@@ -143,12 +182,7 @@ class ReviewTicket extends Component {
 			default:
 				break
 		}
-/*
-<p><strong>Log:</strong></p>
-	{ ticket.log.map((entry, index) => <p key={index}>
-		<strong>{entry.staff}: </strong>{entry.type} | {entry.note}<em> - {moment(entry.date).format('M/D h:mm a')}</em>
-	</p> ) }
-	*/
+
     return (
 			<div className='main'>
 				{ this.state.redirect && this.state.redirect }
@@ -156,11 +190,11 @@ class ReviewTicket extends Component {
 				<div className='main-column'>
 					<div>
 						<p><strong>Type:</strong> {ticket.kind}</p>
-						<p><strong>Requested By:</strong> {ticket.user.first} {ticket.user.last}</p>
-						<p><strong>Requested For:</strong> {ticket.for}</p>
-						<p><strong>Priority:</strong> {ticket.for}</p>
+						<p><strong>Requested By:</strong> {ticket.user_id}</p>
+						<p><strong>Requested For:</strong> {ticket.requestor_id}</p>
+						<p><strong>Priority:</strong> {ticket.priority}</p>
 
-						<button onClick={this.confirm}>Accept</button>
+						<button className="primary" onClick={this.confirm}>Accept</button>
 						<button onClick={this.cancel}>Cancel</button>
 					</div>
 

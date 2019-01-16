@@ -22,21 +22,19 @@ class ProgramSelect extends Component {
   }
 
   render() {
-		let value = this.props.value ? this.props.value : '5ba10e8bab1a991b9b327ab3'
     return(
-      <div className="select">
-				<label htmlFor={this.props.name} style={this.props.error ? {color:'red'} : {}} className="form-label">
+      <div className={"select " + (this.props.error ? 'error' : '')}>
+				<label htmlFor={this.props.name} className="form-label">
 	        {this.props.title}
-	        {this.props.message && <span style={{fontSize: '12px'}}><br />{this.props.message}</span>}
 	      </label>
         <select
           name={this.props.name}
-          value={value}
+          value={this.props.value || ''}
 					className="selectBox"
           onChange={this.props.handleChange}
 					disabled={ this.props.disabled && 'disabled'}
           >
-          <option value="" disabled>{this.props.placeholder}</option>
+          <option disabled={true} value=''>{this.props.placeholder}</option>
           { this.props.extraOptions && this.props.extraOptions
             .map(option => (
               <option key={option} value={option}>{option}</option>
@@ -44,10 +42,13 @@ class ProgramSelect extends Component {
           }
           { this.state.programs
             .map(program => (
-              <option key={program._id} value={program._id}>{program.name}</option>
+              <option key={program.code} value={program.code}>{program.name}</option>
             ))
           }
         </select>
+        {this.props.error &&
+          <span>{this.props.error}</span>
+        }
       </div>
     )
   }

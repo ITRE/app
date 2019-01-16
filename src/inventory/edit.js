@@ -23,8 +23,8 @@ class EditInventory extends Component {
 			serial: '',
 			bought: '',
 			project: '',
-			program: '5ba10e8bab1a991b9b327ab3',
-			user: '5ba2a0450a161d02ca25b959',
+			program: 'ITWEB',
+			user: 'none',
 			kind: '',
 			location: '',
 			log: {
@@ -43,7 +43,7 @@ class EditInventory extends Component {
 
 	cancel() {
 		this.setState({
-			finished: <Redirect to={{pathname: '/'}}/>
+			finished: <Redirect to={{pathname: '/inventory'}}/>
 		})
 	}
 
@@ -54,8 +54,8 @@ class EditInventory extends Component {
 				serial: this.props.location.state.inv.serial ? this.props.location.state.inv.serial : '',
 				bought: this.props.location.state.inv.bought ? moment(this.props.location.state.inv.bought).format('YYYY-MM-DD') : '',
 				project: this.props.location.state.inv.project ? this.props.location.state.inv.project : '',
-				program: this.props.location.state.inv.program ? this.props.location.state.inv.program : '5ba10e8bab1a991b9b327ab3',
-				user: this.props.location.state.inv.user._id ? this.props.location.state.inv.user._id : '5ba2a0450a161d02ca25b959',
+				program: this.props.location.state.inv.program ? this.props.location.state.inv.program : 'ITWEB',
+				user: this.props.location.state.inv.user ? this.props.location.state.inv.user.username : 'none',
 				kind: this.props.location.state.inv.kind ? this.props.location.state.inv.kind : '',
 				location: this.props.location.state.inv.location ? this.props.location.state.inv.location : '',
 				item: this.props.location.state.inv.item ? {...this.props.location.state.inv.item} : {}
@@ -66,7 +66,6 @@ class EditInventory extends Component {
 	change(event) {
 		const value = event.target.value
     const name = event.target.name
-		console.log(value)
     this.setState({
 			[name]: value
 		})

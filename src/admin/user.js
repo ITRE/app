@@ -22,7 +22,7 @@ class AdminNewUser extends Component {
 					hardware= {this.props.location.state.info.hardware}
 					account= {this.props.location.state.info.account}
 					other= {this.props.location.state.info.other}
-					username={this.props.location.state.info.username}
+					username={this.props.location.state.info.first.substring(1) + this.props.location.state.info.last}
 					password={'SOMEPASSWORD'}
 					role={this.props.location.state.info.role}
 					email={this.props.location.state.info.email}

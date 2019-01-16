@@ -33,14 +33,14 @@ class Other extends Component {
 				tried: newTried
 			}, () => {
 				const info = {...this.state}
-				this.props.test(info)
+				this.props.setInfo(info)
 			})
 		} else {
 	    this.setState({
 				[name]: value
 			}, () => {
 				const info = {...this.state}
-				this.props.test(info)
+				this.props.setInfo(info)
 			})
 		}
 	}
@@ -48,7 +48,7 @@ class Other extends Component {
   render() {
     return (
 			<section className="field-group">
-				<h2>Other</h2>
+				<h2>Other Information</h2>
 				<Textarea
 					title='Additional Description'
 					name='desc'

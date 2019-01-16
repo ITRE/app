@@ -49,11 +49,11 @@ class EquipmentSelect extends Component {
     return(
 			<div>
 			{ this.props.display.computer &&
-				<div className="form-group">
-					<label htmlFor='computers' className="form-label">Computers</label>
+				<section className="field-group">
+					<h2>Computers</h2>
 						<div className="checkbox-group">
-							{ this.state.computers.length <= 0 && <p>No Computers Currently Available</p>}
-			        { this.state.computers.length > 0 && this.state.computers
+							{ this.state.computers.filter((option => option.available)).length <= 0 && <p>No Computers Currently Available</p>}
+			        { this.state.computers.filter((option => option.available)).length > 0 && this.state.computers
 								.filter((option => option.available))
 								.map(option => {
 				          return (
@@ -63,22 +63,22 @@ class EquipmentSelect extends Component {
 				                id = 'computers'
 				                name={option.item.brand+' '+option.item.type}
 				                onChange={ this.props.handleChange }
-				                value={option.itreID}
+				                value={option._id}
 				                disabled={ this.props.disabled ? 'disabled' : '' }
-				                checked={ this.props.value.computer.indexOf(option.itreID) !== -1 }
+				                checked={ this.props.value.computer.indexOf(option._id) !== -1 }
 				                type="checkbox" /> <strong>{option.itreID}</strong> {option.item.brand} {option.item.model}
 				            </label>
 				          )
 				        })}
 			      </div>
-	      </div>
+	      </section>
 			}
 			{ this.props.display.cord &&
-				<div className="form-group">
-					<label htmlFor='cords' className="form-label">Cords</label>
+				<section className="field-group">
+					<h2>Account</h2>
 						<div className="checkbox-group">
-							{ this.state.cords.length <= 0 && <p>No Cords Currently Available</p>}
-			        { this.state.cords.length > 0 && this.state.cords
+							{ this.state.cords.filter((option => option.available)).length <= 0 && <p>No Cords Currently Available</p>}
+			        { this.state.cords.filter((option => option.available)).length > 0 && this.state.cords
 								.filter((option => option.available))
 								.map(option => {
 				          return (
@@ -96,14 +96,14 @@ class EquipmentSelect extends Component {
 				          )
 				        })}
 			      </div>
-	      </div>
+	      </section>
 			}
 			{ this.props.display.accessory &&
-				<div className="form-group">
-					<label htmlFor='accessory' className="form-label">Accessories</label>
+				<section className="field-group">
+					<h2>Account</h2>
 						<div className="checkbox-group">
-							{ this.state.accessories.length <= 0 && <p>No Accessories Currently Available</p>}
-			        { this.state.accessories.length > 0 && this.state.accessories
+							{ this.state.accessories.filter((option => option.available)).length <= 0 && <p>No Accessories Currently Available</p>}
+			        { this.state.accessories.filter((option => option.available)).length > 0 && this.state.accessories
 								.filter((option => option.available))
 								.map(option => {
 				          return (
@@ -121,7 +121,7 @@ class EquipmentSelect extends Component {
 				          )
 				        })}
 			      </div>
-	      </div>
+	      </section>
 			}
 			</div>
     )

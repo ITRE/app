@@ -22,9 +22,9 @@ class NewInventory extends Component {
 			serial: '',
 			bought: '',
 			project: '',
-			program: '',
+			program_id: '',
 			user: '',
-			kind: '',
+			kind: 'Computer',
 			location: '',
 			item: {},
 			none: false,
@@ -45,7 +45,7 @@ class NewInventory extends Component {
   componentDidMount() {
 		if(this.props.user) {
 			this.setState({
-				program: this.props.user.program,
+				program_id: this.props.user.program_id,
 				location: this.props.user.room,
 				project: this.props.account,
 				none: true
@@ -73,13 +73,13 @@ class NewInventory extends Component {
 			serial: this.state.serial,
 			bought: this.state.bought,
 			project: this.state.project,
-			program: this.state.program,
+			program_id: this.state.program_id,
 			user: this.state.user,
 			kind: this.state.kind,
 			location: this.state.location
 		}
 
-		if(this.props.user) {
+		if(this.props.pushNew) {
 			newInv.item = this.state.item
 			this.props.pushNew(newInv)
 			this.setState({
@@ -87,7 +87,7 @@ class NewInventory extends Component {
 				serial: '',
 				bought: '',
 				project: '',
-				program: '',
+				program_id: '',
 				user: '',
 				kind: '',
 				location: '',
@@ -128,79 +128,97 @@ class NewInventory extends Component {
 			default:
 				kind = ''
 		}
-    return (
-			<div className="main">
-				{this.state.finished && this.state.finished}
-				<h1>New Inventory</h1>
-				<form className='form' onSubmit={this.submit}>
-					<Programs
-						title='Owner'
-						name='program'
-						value={this.state.program}
-						handleChange={this.change}
-						placeholder='Select One'
-					/>
-				{ !this.state.none &&
-					<Users
-						title='User'
-						name='user'
-						value={this.state.user}
-						handleChange={this.change}
-						placeholder='Select One'
-					/> }
-					<Select
-						title='Kind'
-						name='kind'
-						options={['Computer', 'Cord', 'Accessory']}
-						value={this.state.kind}
-						handleChange={this.change}
-						placeholder='Select One'
-					/>
-					<Input
-						title='ITRE ID'
-						name='itreID'
-						type='text'
-						value={this.state.itreID}
-						handleChange={this.change}
-						placeholder='ITRE 123'
-					/>
-					<Input
-						title='Serial Number'
-						name='serial'
-						type='text'
-						value={this.state.serial}
-						handleChange={this.change}
-						placeholder='Serial Number'
-					/>
-					<Date
-						title='When was this purchased?'
-						name='bought'
-						value={this.state.bought}
-						handleChange={this.change}
-					/>
-					<Input
-						title='Account Number'
-						name='project'
-						type='text'
-						value={this.state.project}
-						handleChange={this.change}
-						placeholder='Account Number'
-					/>
-					<Input
-						title='Location'
-						name='location'
-						type='text'
-						value={this.state.location}
-						handleChange={this.change}
-						placeholder='Room Number'
-					/>
-					{kind}
-					<br />
-					<button type="submit" className="primary" value="Submit">Create</button>
-					<button type="button" onClick={this.cancel}>Cancel</button>
-				</form>
-			</div>
-    )
+
+		const form = (<form className='form' onSubmit={this.submit}>
+		<section className="field-group">
+			<h2>Owner Information</h2>
+			<Programs
+				title='Owner'
+				name='program_id'
+				value={this.state.program_id}
+				handleChange={this.change}
+				placeholder='Select One'
+			/>
+		{ !this.state.none &&
+			<Users
+				title='User'
+				name='user'
+				value={this.state.user}
+				handleChange={this.change}
+				placeholder='Select One'
+			/> }
+		</section>
+		<section className="field-group">
+			<h2>General Information</h2>
+			<Select
+				title='Kind'
+				name='kind'
+				options={['Computer', 'Cord', 'Accessory']}
+				value={this.state.kind}
+				handleChange={this.change}
+				placeholder='Select One'
+			/>
+			<Input
+				title='ITRE ID'
+				name='itreID'
+				type='text'
+				value={this.state.itreID}
+				handleChange={this.change}
+				placeholder='ITRE 123'
+			/>
+			<Input
+				title='Serial Number'
+				name='serial'
+				type='text'
+				value={this.state.serial}
+				handleChange={this.change}
+				placeholder='Serial Number'
+			/>
+			<Date
+				title='When was this purchased?'
+				name='bought'
+				value={this.state.bought}
+				handleChange={this.change}
+			/>
+			<Input
+				title='Account Number'
+				name='project'
+				type='text'
+				value={this.state.project}
+				handleChange={this.change}
+				placeholder='Account Number'
+			/>
+			<Input
+				title='Location'
+				name='location'
+				type='text'
+				value={this.state.location}
+				handleChange={this.change}
+				placeholder='Room Number'
+			/>
+		</section>
+			{kind}
+			<br />
+			<button type="submit" className="primary" value="Submit">Create</button>
+			<button type="button" onClick={this.cancel}>Cancel</button>
+		</form>)
+
+		if (this.props.pushNew) {
+			return (
+				<section >
+					<p>Creates a placeholder in the equipment database and opens a new purchase request ticket.</p>
+					{form}
+				</section>
+			)
+		} else {
+	    return (
+				<div className="main">
+					{this.state.finished && this.state.finished}
+					<h1>New Inventory</h1>
+					{form}
+				</div>
+	    )
+		}
   }
 }
 

@@ -37,19 +37,18 @@ class UserSelect extends Component {
 
   render() {
     return(
-      <div className="select">
-				<label htmlFor={this.props.name} style={this.props.error ? {color:'red'} : {}} className="form-label">
+      <div className={"select " + (this.props.error ? 'error' : '')}>
+				<label htmlFor={this.props.name} className="form-label">
 	        {this.props.title}
-	        {this.props.message && <span style={{fontSize: '12px'}}><br />{this.props.message}</span>}
 	      </label>
         <select
           name={this.props.name}
 					className="selectBox"
-          value={this.props.value}
+          value={this.props.value || ''}
           onChange={this.props.handleChange}
 					disabled={ this.props.disabled && 'disabled'}
           >
-          <option value="5ba2a0450a161d02ca25b959">None</option>
+          <option value='' disabled={true}>{this.props.placeholder}</option>
           { this.props.extraOptions && this.props.extraOptions
             .map(option => (
               <option key={option} value={option}>{option}</option>
@@ -57,10 +56,13 @@ class UserSelect extends Component {
           }
           { this.state.users
             .map(user => (
-              <option key={user._id} value={this.props.string ? (user.first+' '+user.last) : user._id}>{user.first} {user.last}</option>
+              <option key={user.username} value={user.username}>{user.first} {user.last}</option>
             ))
           }
         </select>
+        {this.props.error &&
+          <span>{this.props.error}</span>
+        }
       </div>
     )
   }

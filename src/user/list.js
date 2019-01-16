@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import axios from 'axios'
 
-import Checkbox from '../form/checkbox.js'
+import Table from '../form/table.js'
 
 const jwt = require('jsonwebtoken')
 
@@ -10,20 +10,12 @@ class UserList extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			username: '',
-		  role: '',
-		  email:'',
-		  phone: '',
-		  first: '',
-		  last: '',
-		  program: '',
-		  super: '',
-		  room: '',
 			users: [],
 			filters: ['Admin', 'Staff', 'Student', 'Temp', 'Other'],
 			user: jwt.decode(localStorage.getItem('access token'))
 		}
 		this.change = this.change.bind(this)
+		this.edit = this.edit.bind(this)
 	}
 
 	componentDidMount() {
@@ -58,53 +50,57 @@ class UserList extends Component {
 		}
 	}
 
+	edit(user) {
+		this.setState({
+			redirect: <Redirect to={{
+				pathname: '/account/edit',
+				state: {user: user}
+			}} />
+		})
+	}
+
   render() {
-		return (
+		let headers = ['Full Name', 'Role', 'Room', 'Supervisor', 'Program']
+		if (this.state.user.role === 'Admin') {
+			headers.push('Edit')
+		}
+		const items = this.state.users.sort((a,b) => {
+			const order = {'Admin':1, 'Staff':2, 'Student':3, 'Temp':4, 'Other':5, 'None':6 }
+			return order[a.role] - order[b.role]
+		})
+		.map((user, index) => {
+			let item = {
+				full: user.first + ' ' + user.last,
+				role: user.role,
+				room: user.room,
+				super: user.super ? user.super.first + ' ' + user.super.last : 'No Supervisor',
+				program: user.program ? user.program.name : 'No Program'
+			}
+			if (this.state.user.role === 'Admin') {
+				item.button = {
+					click: () => this.edit(user),
+					label: 'Edit'
+				}
+			}
+			return item
+		})
+
+		return(
 			<div className="main">
 				{ this.state.redirect && this.state.redirect }
 				<h1>Users</h1>
-				<section className="field-group">
-					<h2>Filter</h2>
-						<Checkbox
-							title=''
-							name='filters'
-							options={['Admin', 'Staff', 'Student', 'Temp', 'Other']}
-							selectedOptions={this.state.filters}
-							handleChange={this.change}
-							buttons={true}
-						/>
-				</section>
-
-				<div className="field-group">
-					<div className="flex headers">
-		        <p className="column"><strong>Username</strong></p>
-		        <p className="column"><strong>Full Name</strong></p>
-		        <p className="column"><strong>Room</strong></p>
-		        <p className="column"><strong>Supervisor</strong></p>
-		        <p className="column"><strong>Program</strong></p>
-					</div>
-					{ this.state.users
-						.sort((a,b) => {
-							const order = {admin:1, staff:2, student:3, temp:4, other:5 }
-							return order[a.role] - order[b.rol]
-						})
-						.filter(a => this.state.user.role === 'admin' || a.role !== 'admin')
-						.filter(a => this.state.filters.indexOf(a.role) >= 0)
-						.map((user, index) => (
-							<div key={user.username} className="line-item">
-			          <button className="column" >{ user.username }</button>
-			          <p className="column">{ user.first } { user.last }</p>
-			          <p className="column">{user.room}</p>
-								{user.super && <p className="column">{user.super.first} {user.super.last}</p>}
-								{!user.super && <p className="column">No Supervisor</p>}
-								{user.program && <p className="column">{user.program.name}</p>}
-								{!user.program && <p className="column">No Program</p>}
-			        </div>
-						))
-					}
-				</div>
+				{ items.length > 0 &&
+					<Table
+					headers={headers}
+					items={items}
+					filterOptions={['Admin', 'Staff', 'Student', 'Temp', 'Other']}
+					filters={this.state.filters}
+					filterCategory={'role'}
+					change={this.change}
+				/>
+				}
 			</div>
-    );
+		)
   }
 }
 
