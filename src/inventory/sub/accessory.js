@@ -27,6 +27,7 @@ class Accessory extends Component {
 				size: this.props.item.ram ? this.props.item.ram : '',
 				price: this.props.item.price ? this.props.item.price : ''
 			})
+			this.props.set({...this.state})
 		}
 	}
 

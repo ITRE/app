@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import axios from 'axios'
+import moment from 'moment'
 
 import Request from './sub/request'
 const jwt = require('jsonwebtoken')
@@ -157,7 +158,14 @@ class Tickets extends Component {
 								'Seen': 4,
 								'In Progress': 5,
 								'On Hold': 6, }
-							return order[a.status] - order[b.status] || a.added - b.added
+							if (a.log.length > 0) {
+								if (moment().isSameOrAfter(moment(a.log[a.log.length-1].date).add(7, 'days'))) {
+									return -1;
+								}
+							} else if (moment().isSameOrAfter(moment(a.added).add(7, 'days'))) {
+								return -1;
+							}
+							return order[a.status] - order[b.status]
 						})
 						.map( (ticket, index) => {
 							return (
@@ -181,10 +189,7 @@ class Tickets extends Component {
 						this.state.tickets
 						.filter(a => a.status === 'Completed' || a.status === 'Closed')
 						.sort((a,b) => {
-							const order = {
-							'Completed': 1,
-							'Closed': 2}
-							return order[a.status] - order[b.status] || a.added - b.added
+							return moment(a.log[a.log.length-1].date).isSameOrAfter(b.log[b.log.length-1].date) ? -1 : 1
 						})
 						.map( (ticket, index) => {
 							return (

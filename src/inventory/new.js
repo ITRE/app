@@ -86,11 +86,11 @@ class NewInventory extends Component {
 				itreID: '',
 				serial: '',
 				bought: '',
-				project: '',
-				program_id: '',
+				program_id: this.props.user.program_id,
+				location: this.props.user.room,
+				project: this.props.account,
 				user: '',
-				kind: '',
-				location: '',
+				kind: 'Computer',
 				item: {},
 			})
 			window.scrollTo(0, 0)

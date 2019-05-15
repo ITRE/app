@@ -31,6 +31,7 @@ class Cord extends Component {
 				length: this.props.item.length ? this.props.item.length : '',
 				price: this.props.item.price ? this.props.item.price : ''
 			})
+			this.props.set({...this.state})
 		}
 	}
 

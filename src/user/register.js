@@ -177,6 +177,7 @@ class Register extends Component {
 	}
 
   render() {
+		console.log(this.state)
     return (
 			<div className="main">
 				{this.state.registered && this.state.registered}
@@ -210,7 +211,7 @@ class Register extends Component {
 							title='Role:'
 							name='role'
 							error={this.state.errors.role}
-							options={['Admin', 'Staff', 'Student', 'Temp', 'Other']}
+							options={['Staff', 'Student', 'Grad Student', 'Temp', 'Other']}
 							disabled={this.props.role && true}
 							value={this.state.role}
 							handleChange={this.change}

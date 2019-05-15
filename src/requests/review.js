@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Redirect } from 'react-router-dom'
-import moment from 'moment'
 import Swal from 'sweetalert2'
 
 const jwt = require('jsonwebtoken')
@@ -55,14 +54,14 @@ class ReviewTicket extends Component {
   }
 
 	newInv(ids) {
-		const { user, info } = this.props.location.state
+		const { user, ticket, info } = this.props.location.state
 		let batch = []
 		ids.map(id => {
 			batch.push({
 				kind: {
 				  account: info.account,
 				  need: info.start,
-				  type: id.type,
+				  type: id.item.type,
 				  tempItem: id._id
 				},
 				ticket: {
@@ -71,6 +70,7 @@ class ReviewTicket extends Component {
 			  	kind: 'Equipment'
 				}
 			})
+			return id
 		})
 		axios.post(`http://api.ems.test/tickets/purchases`, {
 			batch: batch,
@@ -149,26 +149,16 @@ class ReviewTicket extends Component {
 		})
 	}
 
-	mainInfo(title, info) {
-		return (
-			<div>
-				<h3>{title}</h3>
-				{ Object.keys(info).map((key, index) => <p key={index}><strong>{key}: </strong>{info[key]}</p>) }
-			</div>
-		)
-	}
-
 	subInfo(title, info) {
 		return (
-			<div>
-				<h3>{title}</h3>
+			<section className="field-group">
+				<h2>{title}</h2>
 				{ Object.keys(info).map((key, index) => <p key={index}><strong>{key}: </strong>{info[key]}</p>) }
-			</div>
+			</section>
 		)
 	}
 
   render() {
-		console.log(this.props.location.state)
 		const { ticket, inventory, user } = this.props.location.state
 		let title, aside, main, side
 
@@ -184,25 +174,26 @@ class ReviewTicket extends Component {
 		}
 
     return (
-			<div className='main'>
+			<div className='main flex'>
 				{ this.state.redirect && this.state.redirect }
 				<h1 className='full-column'>Request Review</h1>
 				<div className='main-column'>
-					<div>
+					<section className="field-group">
+						<h2>Ticket Information</h2>
 						<p><strong>Type:</strong> {ticket.kind}</p>
 						<p><strong>Requested By:</strong> {ticket.user_id}</p>
 						<p><strong>Requested For:</strong> {ticket.requestor_id}</p>
 						<p><strong>Priority:</strong> {ticket.priority}</p>
-
+					</section>
+					{ aside && this.subInfo(aside, side) }
+					<section className="field-group">
 						<button className="primary" onClick={this.confirm}>Accept</button>
 						<button onClick={this.cancel}>Cancel</button>
-					</div>
-
-					{ aside && this.subInfo(aside, side) }
+					</section>
 				</div>
 
 				<div className="side-column">
-					{ this.mainInfo(title, main) }
+					{ this.subInfo(title, main) }
 				</div>
 			</div>
     )

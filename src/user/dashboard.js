@@ -251,7 +251,19 @@ class Dashboard extends Component {
 				<div className="main-column">
 	         <h2>Active Requests</h2>
 					 { this.state.tickets.length > 0 &&
-						 this.state.tickets.map((ticket, index) => (
+						 this.state.tickets
+						 .filter(a => a.status !== 'Completed' && a.status !== 'Closed')
+						 .sort((a,b) => {
+							 const order = {
+								 'Awaiting Reply': 1,
+								 'New': 2,
+								 'Reopened': 3,
+								 'Seen': 4,
+								 'In Progress': 5,
+								 'On Hold': 6, }
+							 return order[a.status] - order[b.status]
+						 })
+						 .map((ticket, index) => (
 							 <Request
 								key={ticket._id}
 								ticket={ticket}

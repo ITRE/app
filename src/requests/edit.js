@@ -89,6 +89,9 @@ class EditTicket extends Component {
 			status: this.state.status,
 			info: this.state.info._id
 		}
+		if (this.props.location.state.ticket.status === this.state.status && this.state.status === 'New') {
+			newTicket.status = 'Seen'
+		}
 		if (this.state.kind === 'New User') {
 			newTicket.kind = 'NewUser'
 		}

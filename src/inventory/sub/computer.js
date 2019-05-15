@@ -29,6 +29,7 @@ class Computer extends Component {
 				cpu: this.props.item.cpu ? this.props.item.cpu : '',
 				price: this.props.item.price ? this.props.item.price : ''
 			})
+			this.props.set({...this.state})
 		}
 	}
 

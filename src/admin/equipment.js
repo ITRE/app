@@ -21,7 +21,6 @@ class AdminNewEquipment extends Component {
 
 
 	change(event) {
-		console.log(this.state)
 		const value = event.target.value
     const name = event.target.name
 		let equipment = [...this.state.currentEquipment]
@@ -75,8 +74,6 @@ class AdminNewEquipment extends Component {
 	}
 
   render() {
-
-			console.log(this.props.location.state)
 		let userInfo = []
 		let value = {}
 		let multiple = {
@@ -84,7 +81,7 @@ class AdminNewEquipment extends Component {
 			cord: false,
 			accessory: false
 		}
-		const {ticket, user, info} = this.props.location.state
+		const {user, info} = this.props.location.state
 
 		for (const key in user) {
 			switch(key) {

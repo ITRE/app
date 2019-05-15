@@ -15,7 +15,6 @@ import ListUsers from './user/list'
 import AdminNewUser from './user/register'
 
 import AdminAddEquipment from './admin/equipment'
-import PurchaseInventory from './admin/purchase'
 
 import NewTicket from './requests/new'
 import EditTicket from './requests/edit'
@@ -88,7 +87,6 @@ class Home extends Component {
 						<Route path="/account/edit" component={EditUser}/>
 
 						<Route path="/inventory/edit" component={EditInventory}/>
-						<Route path="/inventory/purchase" component={PurchaseInventory}/>
 						<Route path="/inventory/new" component={AddInventory}/>
 						<Route path="/inventory" component={InventoryList}/>
 

@@ -86,14 +86,22 @@ class Request extends Component {
 	render(){
 		const {ticket} = this.props
 		let kind = ticket.kind
+		let priority = ticket.priority
 		if (kind === 'NewUser') {
 			kind = 'New User'
+		}
+		if (ticket.log.length > 0) {
+			if (moment().isSameOrAfter(moment(ticket.log[ticket.log.length-1].date).add(7, 'days'))) {
+				priority = 'Ignored'
+			}
+		} else if (moment().isSameOrAfter(moment(ticket.added).add(7, 'days'))) {
+			priority = 'Ignored'
 		}
 		if (this.props.viewer.role === 'Admin') {
 			return(
 				<div className="admin">
-					<div className={"status "+ticket.status+' '+ticket.priority} onClick={this.info}>
-						{ticket.status} - {ticket.priority}
+					<div className={"status "+ticket.status+' '+priority} onClick={this.info}>
+						{ticket.status} - {priority}
 					</div>
 					<div className="request-info">
 						<p><strong>Ticket for:</strong> {ticket.for.first} {ticket.for.last}</p>
@@ -107,8 +115,8 @@ class Request extends Component {
 							{ (ticket.status !== 'Completed' && ticket.status !== 'Closed')
 								&& <button className="primary" onClick={this.edit}>Work On Request</button> }
 							{ ticket.status === 'New' && <button onClick={this.seen}>Mark Seen</button> }
-							{ ticket.status === 'Completed' && <button onClick={this.reopen}>Reopen</button> }
-							{ ticket.status !== 'Completed' && <button onClick={this.complete}>Mark Complete</button> }
+							{ (ticket.status === 'Completed' || ticket.status === 'Closed') && <button onClick={this.reopen}>Reopen</button> }
+							{ (ticket.status !== 'Completed' && ticket.status !== 'Closed') && <button onClick={this.complete}>Mark Complete</button> }
 						</div>
 					</div>
 				</div>
